@@ -11,7 +11,8 @@
 <body>
   <div class="flipbook">
     <div>
-      <img src="images/cover1.webp" alt="" /></div>
+      <img src="images/cover1.webp" alt="" />
+    </div>
     <div class="hard"></div>
     <div>
       <img src="images/cover2.webp" alt="" />
@@ -58,8 +59,39 @@
 
   <script src="jquery.js"></script>
   <script src="turn.js"></script>
+  
   <script>
-    $(".flipbook").turn();
+    $(document).ready(function() {
+      // 1. Inisialisasi Flipbook dengan ukuran dari CSS
+      $(".flipbook").turn({
+        width: 1000,
+        height: 600,
+        autoCenter: true,
+        duration: 1000 // Durasi animasi dalam milidetik
+      });
+
+      // 2. Tambahan fitur Klik (Pengganti funkce.js yang hilang)
+      // Klik kiri = Mundur, Klik kanan = Maju
+      $(".flipbook").click(function(e) {
+        var offset = $(this).offset();
+        var width = $(this).width();
+        
+        // Cek posisi klik mouse (X axis)
+        if (e.pageX - offset.left < width / 2) {
+           $(this).turn("previous"); // Klik di kiri -> Previous
+        } else {
+           $(this).turn("next");     // Klik di kanan -> Next
+        }
+      });
+      
+      // Mencegah scroll saat double click (opsional, untuk kenyamanan)
+      $(window).bind('keydown', function(e){
+        if (e.keyCode==37) 
+            $('.flipbook').turn('previous');
+        else if (e.keyCode==39)
+            $('.flipbook').turn('next');
+      });
+    });
   </script>
 </body>
 
