@@ -79,6 +79,7 @@ body {
 /* Class aktif untuk memunculkan shadow */
 .shadow-item.active {
     opacity: 1;
+    transition: opacity 0.2s ease-in-out;
 }
 
 /* --- FLIPBOOK --- */
