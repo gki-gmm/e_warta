@@ -83,29 +83,6 @@
         }
       });
 
-      // Fungsi untuk mengatur shadow mana yang muncul
-      function updateShadows(page) {
-        var totalPages = flipbook.turn("pages");
-
-        // Matikan semua shadow dulu (biar transisi halus)
-        $(".shadow-item").removeClass("active");
-        $(".flipbook").removeClass("show-spine");
-
-        if (page == 1) {
-          // KONDISI 1: Cover Depan
-          shadowFront.addClass("active"); // Munculkan Front Shadow
-
-        } else if (page == totalPages) {
-          // KONDISI 2: Cover Belakang
-          shadowBack.addClass("active"); // Munculkan Back Shadow
-
-        } else {
-          // KONDISI 3: Buku Terbuka
-          shadowFlip.addClass("active"); // Munculkan Flip Shadow
-          $(".flipbook").addClass("show-spine"); // Munculkan garis tengah
-        }
-      }
-
       function resizeViewport() {
         var width = $(window).width();
         var height = $(window).height();
