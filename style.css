@@ -60,7 +60,7 @@ body {
     top: 50%; left: 50%;
     margin-left: 15vh;
     transform: translate(-50%, -50%);
-    width: 1060px; height: 740px; /* Area shadow */
+    width: 960px; height: 680px; /* Area shadow */
     z-index: -1;
     pointer-events: none;
 }
