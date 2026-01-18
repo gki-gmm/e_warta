@@ -10,7 +10,10 @@
 
 <body>
 
-  <div id="loader">Menyiapkan Tampilan...</div>
+  <div id="loader-overlay">
+      <div class="spinner"></div>
+      <div class="loading-text">Memuat Warta...</div>
+  </div>
 
   <div class="viewport">
     <div class="flipbook">
@@ -46,60 +49,73 @@
   <script src="turn.js"></script>
   
   <script>
+    // PENTING: Gunakan window load (bukan document ready) 
+    // agar menunggu SEMUA gambar selesai didownload baru script jalan
     $(window).on('load', function() {
-      $("#loader").fadeOut();
+      
       var flipbook = $(".flipbook");
+      var loader = $("#loader-overlay");
 
-      // Inisialisasi Turn.js
+      // 1. Inisialisasi Turn.js (Dalam keadaan tersembunyi)
       flipbook.turn({
         width: 960,
         height: 680,
         autoCenter: true,
         acceleration: true,
-        gradients: true, // Efek lipatan 3D saat dibalik
+        gradients: true,
         elevation: 50,
         duration: 1000
       });
 
-      // Fungsi Responsif
+      // 2. Fungsi Resize (Smart Responsive)
       function resizeViewport() {
         var width = $(window).width();
         var height = $(window).height();
 
         if (width < 768) {
-            // MODE MOBILE (1 Halaman)
+            // MODE MOBILE
             var mobileWidth = width * 0.95;
             var mobileHeight = mobileWidth * 1.414;
             if(mobileHeight > height * 0.9) {
                 mobileHeight = height * 0.9;
                 mobileWidth = mobileHeight / 1.414;
             }
-
             flipbook.turn("display", "single");
             flipbook.turn("size", mobileWidth, mobileHeight);
             $(".flipbook").css("transform", "scale(1)");
-            
         } else {
-            // MODE DESKTOP (2 Halaman)
+            // MODE DESKTOP
             var deskWidth = 960;
             var deskHeight = 680;
-
             if (width < 1000) {
                 var scale = width / 1100;
                 $(".flipbook").css("transform", "scale("+scale+")");
             } else {
                  $(".flipbook").css("transform", "scale(1)");
             }
-
             flipbook.turn("display", "double");
             flipbook.turn("size", deskWidth, deskHeight);
         }
       }
 
+      // Jalankan resize dulu agar ukuran pas
       resizeViewport();
       $(window).resize(resizeViewport);
 
-      // Controls
+      // 3. TRANSISI LOADING YANG CANTIK
+      // Beri sedikit delay agar user yakin layout sudah stabil
+      setTimeout(function(){
+          
+          // Hilangkan loading screen
+          loader.fadeOut(500, function() {
+              // Setelah loading hilang, baru munculkan buku pelan-pelan
+              flipbook.addClass("loaded"); 
+          });
+
+      }, 500); // Delay 0.5 detik (opsional)
+
+      
+      // Controls Logic
       $("#prevBtn").click(function() { flipbook.turn("previous"); });
       $("#nextBtn").click(function() { flipbook.turn("next"); });
 
