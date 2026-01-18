@@ -53,33 +53,83 @@ body {
     transition: transform 0.6s ease;
 }
 
-/* --- LOGIKA 3 JENIS SHADOW --- */
-/* Wrapper untuk menumpuk semua shadow */
+/* --- LOGIKA 3 JENIS SHADOW (UPDATED) --- */
+
+/* Wrapper Utama - Tidak perlu diubah */
 .shadow-wrapper {
-    position: relative;
-    top: 50%; left: 50%;
-    margin-left: 15vh
+    position: absolute;
+    top: 50%; 
+    left: 50%;
     transform: translate(-50%, -50%);
-    width: 960px; height: 680px; /* Area shadow */
-    z-index: -1;
+    width: 100%; 
+    height: 100%;
+    z-index: -1; /* Di belakang buku */
     pointer-events: none;
 }
 
-/* Style umum untuk ketiga gambar shadow */
+/* Style Dasar Shadow */
 .shadow-item {
-    position: relative;
-    top: 50%; left: 50%;
-    transform: translate(-50%, -50%);
-    width: 100%; height: 100%; /* Mengikuti wrapper */
-    object-fit: contain; /* Agar rasio gambar shadow terjaga */
-    opacity: 0; /* Semua sembunyi dulu */
-    transition: opacity 0.6s ease-in-out; /* Efek transisi halus */
+    position: absolute;
+    opacity: 0;
+    transition: opacity 0.6s ease-in-out;
+    
+    /* Agar gambar tidak gepeng */
+    object-fit: contain; 
 }
 
-/* Class aktif untuk memunculkan shadow */
 .shadow-item.active {
     opacity: 1;
-    transition: opacity 0.6s ease-in-out;
+}
+
+/* ================================================= */
+/* AREA PENGATURAN MANUAL (SESUAIKAN ANGKA DI SINI) */
+/* ================================================= */
+
+/* 1. POSISI SHADOW DEPAN (FRONT COVER) */
+/* Biasanya Cover ada di KANAN atau TENGAH, tergantung gambar shadow kamu */
+.shadow-front {
+    /* Atur lebar dan tinggi gambar shadow */
+    width: 500px;   /* Coba mainkan angka ini */
+    height: 700px;  
+    
+    /* Atur posisi: */
+    top: 50%;       /* Jarak dari atas (50% = tengah vertikal) */
+    left: 75%;      /* 75% artinya geser ke KANAN (karena cover 1 ada di kanan) */
+    
+    /* Titik tumpu (JANGAN DIUBAH kecuali paham) */
+    transform: translate(-50%, -50%); 
+}
+
+/* 2. POSISI SHADOW TENGAH (FLIP / BUKU TERBUKA) */
+/* Ini harusnya pas di tengah-tengah */
+.shadow-flip {
+    /* Lebar shadow terbuka harus lebih lebar dari bukunya (960px) */
+    width: 1100px;  
+    height: 750px;
+    
+    top: 50%;
+    left: 50%;      /* Pas di tengah */
+    
+    transform: translate(-50%, -50%);
+}
+
+/* 3. POSISI SHADOW BELAKANG (BACK COVER) */
+/* Biasanya Cover Belakang ada di KIRI */
+.shadow-back {
+    width: 500px;
+    height: 700px;
+    
+    top: 50%;
+    left: 25%;      /* 25% artinya geser ke KIRI */
+    
+    transform: translate(-50%, -50%);
+}
+
+/* --- MOBILE RESPONSIVE (HP) --- */
+@media (max-width: 767px) {
+    /* Di HP, kita sembunyikan shadow custom agar tidak ribet, 
+       atau kalau mau diatur, sesuaikan di sini */
+    .shadow-wrapper { display: none !important; }
 }
 
 /* --- FLIPBOOK --- */
