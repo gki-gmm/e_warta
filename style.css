@@ -53,66 +53,6 @@ body {
     transition: transform 0.2s ease;
 }
 
-/* --- LOGIKA 3 JENIS SHADOW --- */
-/* Wrapper untuk menumpuk semua shadow */
-.shadow-wrapper {
-    position: absolute;
-    top: 50%; left: 50%;
-    transform: translate(-50%, -50%);
-    width: 960px; height: 680px; /* Area shadow */
-    z-index: -1;
-    pointer-events: none;
-}
-
-/* Style umum untuk ketiga gambar shadow */
-.shadow-item {
-    position: absolute;
-    top: 50%; left: 50%;
-    transform: translate(-50%, -50%);
-    width: 100%; height: 100%; /* Mengikuti wrapper */
-    object-fit: contain; /* Agar rasio gambar shadow terjaga */
-    opacity: 0; /* Semua sembunyi dulu */
-    transition: opacity 0.6s ease-in-out; /* Efek transisi halus */
-}
-.shadow-front {
-    width: 480px;
-    height: 680px;
-    
-    top: 50%;
-    left: 62%;      
-    
-    transform: translate(-50%, -50%);
-    opacity: 0; /* Semua sembunyi dulu */
-    transition: opacity 0.6s ease-in-out; /* Efek transisi halus */
-}
-.shadow-flip {
-    width: 480px;
-    height: 680px;
-    
-    top: 50%;
-    left: 50%;      
-    
-    transform: translate(-50%, -50%);
-    opacity: 0; /* Semua sembunyi dulu */
-    transition: opacity 0.6s ease-in-out; /* Efek transisi halus */
-}
-.shadow-back {
-    width: 480px;
-    height: 680px;
-    
-    top: 50%;
-    left: 22%;      
-    
-    transform: translate(-50%, -50%);
-    opacity: 0; /* Semua sembunyi dulu */
-    transition: opacity 0.6s ease-in-out; /* Efek transisi halus */
-}
-
-/* Class aktif untuk memunculkan shadow */
-.shadow-item.active {
-    opacity: 1;
-}
-
 /* --- FLIPBOOK --- */
 .flipbook {
     transition: margin-left 0.2s ease-in-out;
