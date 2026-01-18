@@ -68,9 +68,8 @@ body {
 .shadow-item {
     position: absolute;
     top: 50%; left: 50%;
-    margin-left: 15vh;
     transform: translate(-50%, -50%);
-    width: 85%; height: 100%; /* Mengikuti wrapper */
+    width: 50%; height: 100%; /* Mengikuti wrapper */
     object-fit: contain; /* Agar rasio gambar shadow terjaga */
     opacity: 0; /* Semua sembunyi dulu */
     transition: opacity 0ms ease-in-out; /* Efek transisi halus */
