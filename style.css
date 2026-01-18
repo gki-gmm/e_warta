@@ -57,8 +57,7 @@ body {
 /* Wrapper untuk menumpuk semua shadow */
 .shadow-wrapper {
     position: absolute;
-    top: 50%; left: 50%;
-    margin-left: 15vh;
+    top: 50%; left: 25%; right: 25%;
     transform: translate(-50%, -50%);
     width: 960px; height: 680px; /* Area shadow */
     z-index: -1;
@@ -68,7 +67,7 @@ body {
 /* Style umum untuk ketiga gambar shadow */
 .shadow-item {
     position: absolute;
-    top: 50%; left: 50%;
+    top: 50%; left: 25%; right: 25%;
     transform: translate(-50%, -50%);
     width: 100%; height: 100%; /* Mengikuti wrapper */
     object-fit: contain; /* Agar rasio gambar shadow terjaga */
