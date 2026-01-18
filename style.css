@@ -95,7 +95,6 @@ body {
 @media (max-width: 767px) {
     .flipbook .page::after { background: none; }
     /* Di Mobile, sembunyikan semua shadow custom agar tidak berat/aneh */
-    .shadow-wrapper { display: none !important; }
     .book-container { width: auto; height: auto; }
 }
 
