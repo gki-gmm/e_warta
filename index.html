@@ -176,6 +176,47 @@
       });
 
     });
+     $(document).ready(function() {
+    
+    // --- LOGIC HAPUS COVER DALAM UNTUK MOBILE ---
+    var screenWidth = $(window).width();
+
+    // Jika lebar layar <= 767px (Mobile)
+    if (screenWidth <= 767) {
+        // Hapus elemen yang memiliki kelas 'inside-cover'
+        $('.flipbook .inside-cover').remove();
+        
+        // Optional: Tambahkan logika lain khusus mobile jika perlu
+        console.log("Mobile mode: Inside covers removed.");
+    }
+    // ----------------------------------------------
+
+    // --- INISIALISASI TURN.JS (PENTING: Letakkan setelah logika hapus) ---
+    $(".flipbook").turn({
+        width: 960,       // Lebar buku (Desktop)
+        height: 680,      // Tinggi buku (Desktop)
+        elevation: 50,
+        gradients: true,
+        autoCenter: true,
+        duration: 1000,
+        
+        // Responsif: Jika di mobile, ubah ukuran bukunya
+        when: {
+            turning: function(e, page, view) {
+                // Logika saat membalik halaman...
+            }
+        }
+    });
+
+    // Responsif CSS untuk Turn.js saat resize window
+    $(window).bind('keydown', function(e){
+        if (e.keyCode==37)
+            $(".flipbook").turn("previous");
+        else if (e.keyCode==39)
+            $(".flipbook").turn("next");
+    });
+
+});
   </script>
 </body>
 
