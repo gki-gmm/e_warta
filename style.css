@@ -47,7 +47,7 @@ body {
 
 /* Container Utama */
 .book-container {
-    position: relative;
+    position: absolute;
     width: 960px; height: 680px;
     display: flex; justify-content: center; align-items: center;
     transition: transform 0.2s ease;
