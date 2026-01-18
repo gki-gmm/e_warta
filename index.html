@@ -11,88 +11,60 @@
 <body>
   <div class="flipbook">
     <div>
-      <img src="images/cover1.webp" alt="" />
+      <img src="images/cover1.webp" alt="Sampul Depan Luar" />
     </div>
-    <div class="hard"></div>
-    <div>
-      <img src="images/cover2.webp" alt="" />
+    
+    <div class="hard">
+      <img src="images/cover2.webp" alt="Sampul Depan Dalam" />
     </div>
-    <div>
-      <img src="images/page1.webp" alt="" />
+    
+    <div><img src="images/page1.webp" alt="" /></div>
+    <div><img src="images/page2.webp" alt="" /></div>
+    <div><img src="images/page3.webp" alt="" /></div>
+    <div><img src="images/page4.webp" alt="" /></div>
+    <div><img src="images/page5.webp" alt="" /></div>
+    <div><img src="images/page6.webp" alt="" /></div>
+    <div><img src="images/page7.webp" alt="" /></div>
+    <div><img src="images/page8.webp" alt="" /></div>
+    <div><img src="images/page9.webp" alt="" /></div>
+    <div><img src="images/page10.webp" alt="" /></div>
+    <div><img src="images/page11.webp" alt="" /></div>
+    <div><img src="images/page12.webp" alt="" /></div>
+    
+    <div class="hard">
+      <img src="images/back2.webp" alt="Sampul Belakang Dalam" />
     </div>
-    <div>
-      <img src="images/page2.webp" alt="" />
+
     </div>
-    <div>
-      <img src="images/page3.webp" alt="" />
-    </div>
-    <div>
-      <img src="images/page4.webp" alt="" />
-    </div>
-    <div>
-      <img src="images/page5.webp" alt="" />
-    </div>
-    <div>
-      <img src="images/page6.webp" alt="" />
-    </div>
-    <div>
-      <img src="images/page7.webp" alt="" />
-    </div>
-    <div>
-      <img src="images/page8.webp" alt="" />
-    </div>
-    <div>
-      <img src="images/page9.webp" alt="" />
-    </div>
-    <div>
-      <img src="images/page10.webp" alt="" />
-    </div>
-    <div>
-      <img src="images/page11.webp" alt="" />
-    </div>
-    <div>
-      <img src="images/page12.webp" alt="" />
-    </div>
-    <div class="hard"></div>
-    <div><img src="images/back2.webp" alt="" /></div>
-  </div>
 
   <script src="jquery.js"></script>
   <script src="turn.js"></script>
   
   <script>
     $(document).ready(function() {
-      // 1. Inisialisasi Flipbook dengan ukuran dari CSS
+      // Inisialisasi Flipbook
       $(".flipbook").turn({
         width: 1000,
         height: 600,
         autoCenter: true,
-        duration: 1000 // Durasi animasi dalam milidetik
+        duration: 1000
       });
 
-      // 2. Tambahan fitur Klik (Pengganti funkce.js yang hilang)
-      // Klik kiri = Mundur, Klik kanan = Maju
+      // Fitur Navigasi Klik & Keyboard
       $(".flipbook").click(function(e) {
         var offset = $(this).offset();
-        var width = $(this).width();
-        
-        // Cek posisi klik mouse (X axis)
-        if (e.pageX - offset.left < width / 2) {
-           $(this).turn("previous"); // Klik di kiri -> Previous
+        if (e.pageX - offset.left < $(this).width() / 2) {
+           $(this).turn("previous");
         } else {
-           $(this).turn("next");     // Klik di kanan -> Next
+           $(this).turn("next");
         }
       });
       
-      // Mencegah scroll saat double click (opsional, untuk kenyamanan)
       $(window).bind('keydown', function(e){
-        if (e.keyCode==37) 
-            $('.flipbook').turn('previous');
-        else if (e.keyCode==39)
-            $('.flipbook').turn('next');
+        if (e.keyCode==37) $('.flipbook').turn('previous');
+        else if (e.keyCode==39) $('.flipbook').turn('next');
       });
     });
   </script>
 </body>
-
 </html>

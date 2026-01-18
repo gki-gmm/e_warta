@@ -1,10 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 
-*{
+* {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-	font-family: "Poppins", sans-serif;
+    font-family: "Poppins", sans-serif;
 }
 
 body {
@@ -12,47 +12,38 @@ body {
     place-content: center;
     height: 100vh;
     width: 100vw;
-	overflow: hidden;
-	background: #f1c40f;
+    overflow: hidden;
+    background: #f1c40f; /* Warna latar belakang halaman web */
 }
 
 .flipbook {
     width: 1000px;
     height: 600px;
+    /* Menghapus background putih agar transparan jika gambar tidak penuh */
+    background-color: transparent; 
 }
 
-.flipbook .hard {
-    background: #c0392b !important;
-    color: #fff;
-    font-weight: bold;
-    border: none; 
-}
-
-.flipbook .hard small{
-	font-style: italic;
-	font-weight: lighter;
-	opacity: 0.7;
-	font-size: 14px;
-}
-
+/* Gaya untuk semua halaman di dalam flipbook */
 .flipbook .page {
-    background: white;
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-	align-items: center;
-    gap: 10px;
-    border: 1px solid rgba(0, 0, 0, 0.11);
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    margin: 0;
+    overflow: hidden; /* Mencegah gambar keluar dari area halaman */
 }
 
-.page img{
-	width: 70%;
-	object-fit: cover;
-	margin: auto;
+/* GAYA KHUSUS UNTUK GAMBAR AGAR PAS */
+.flipbook .page img {
+    width: 100%; /* Gambar memenuhi lebar halaman */
+    height: 100%; /* Gambar memenuhi tinggi halaman */
+    object-fit: fill; /* Memaksa gambar mengisi seluruh area, mungkin sedikit terdistorsi */
+    /* Jika ingin proporsional tapi terpotong, gunakan: object-fit: cover; */
+    display: block; /* Menghilangkan celah di bawah gambar inline */
 }
 
-.flipbook .page small{
-	font-size: 14px;
-    margin-bottom: 10px;
+/* Gaya untuk halaman sampul keras (.hard) */
+.flipbook .hard {
+    /* Warna merah dan style teks dihapus agar gambar terlihat */
+    background: none !important;
+    border: none;
 }
-
