@@ -13,37 +13,46 @@ body {
     height: 100vh;
     width: 100vw;
     overflow: hidden;
-    background: #f1c40f; /* Warna latar belakang halaman web */
+    background: #f1c40f;
 }
 
 .flipbook {
     width: 1000px;
     height: 600px;
-    /* Menghapus background putih agar transparan jika gambar tidak penuh */
-    background-color: transparent; 
+    /* Hilangkan background container agar tidak terlihat warna di balik gambar */
+    background: transparent; 
 }
 
-/* Gaya untuk semua halaman di dalam flipbook */
-.flipbook .page {
+/* 1. Reset Container Halaman */
+.flipbook .page,
+.flipbook .hard,
+.flipbook div {
     width: 100%;
     height: 100%;
-    padding: 0;
-    margin: 0;
-    overflow: hidden; /* Mencegah gambar keluar dari area halaman */
+    margin: 0 !important;   /* Pastikan tidak ada margin */
+    padding: 0 !important;  /* Pastikan tidak ada padding */
+    border: none !important; /* Hilangkan border garis */
+    overflow: hidden;       /* Potong gambar jika kelebihan sedikit */
+    background-color: white; /* Warna dasar kertas jika gambar gagal muat */
 }
 
-/* GAYA KHUSUS UNTUK GAMBAR AGAR PAS */
-.flipbook .page img {
-    width: 100%; /* Gambar memenuhi lebar halaman */
-    height: 100%; /* Gambar memenuhi tinggi halaman */
-    object-fit: fill; /* Memaksa gambar mengisi seluruh area, mungkin sedikit terdistorsi */
-    /* Jika ingin proporsional tapi terpotong, gunakan: object-fit: cover; */
-    display: block; /* Menghilangkan celah di bawah gambar inline */
+/* 2. Paksa Gambar Memenuhi Halaman */
+.flipbook img {
+    width: 100%;
+    height: 100%;
+    
+    /* PENTING: Pilih salah satu mode di bawah ini */
+    
+    /* Opsi A (Rekomendasi): Gambar ditarik paksa agar pas 100% (mungkin sedikit gepeng jika rasio beda) */
+    object-fit: fill; 
+    
+    /* Opsi B: Gambar dipotong agar pas (tidak gepeng, tapi pinggiran gambar mungkin terpotong) */
+    /* object-fit: cover; */
+    
+    display: block; /* Menghilangkan celah putih kecil di bawah gambar */
 }
 
-/* Gaya untuk halaman sampul keras (.hard) */
+/* Khusus Sampul Hard Cover - Hapus warna merah */
 .flipbook .hard {
-    /* Warna merah dan style teks dihapus agar gambar terlihat */
-    background: none !important;
-    border: none;
+    background: none !important; 
 }
