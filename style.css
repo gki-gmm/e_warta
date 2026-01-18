@@ -211,7 +211,7 @@ body {
 }
 
 .loading-text {
-    color: white;
+    color: rgb(0, 0, 0);
     font-size: 14px;
     letter-spacing: 3px;
     text-transform: uppercase;
