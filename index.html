@@ -13,7 +13,6 @@
   <div id="loader">Menyiapkan Tampilan...</div>
 
   <div class="viewport">
-    
     <div class="flipbook">
       <div class="hard"><img src="images/cover1.webp" alt="" /></div>
       <div class="hard"><img src="images/cover2.webp" alt="" /></div>
@@ -50,26 +49,25 @@
     $(window).on('load', function() {
       $("#loader").fadeOut();
       var flipbook = $(".flipbook");
-      // NOTE: Variabel 'shadow' sudah dihapus
 
-      // Inisialisasi
+      // Inisialisasi Turn.js
       flipbook.turn({
         width: 960,
         height: 680,
         autoCenter: true,
         acceleration: true,
-        gradients: true,
+        gradients: true, // Efek lipatan 3D saat dibalik
         elevation: 50,
         duration: 1000
       });
 
-      // FUNGSI CERDAS: Resize & Switch Mode
+      // Fungsi Responsif
       function resizeViewport() {
         var width = $(window).width();
         var height = $(window).height();
 
         if (width < 768) {
-            // --- MODE MOBILE (1 Halaman) ---
+            // MODE MOBILE (1 Halaman)
             var mobileWidth = width * 0.95;
             var mobileHeight = mobileWidth * 1.414;
             if(mobileHeight > height * 0.9) {
@@ -81,26 +79,20 @@
             flipbook.turn("size", mobileWidth, mobileHeight);
             $(".flipbook").css("transform", "scale(1)");
             
-            // (NOTE: Kode shadow opacity dihapus karena sudah dihandle CSS media query)
-            
         } else {
-            // --- MODE DESKTOP (2 Halaman) ---
+            // MODE DESKTOP (2 Halaman)
             var deskWidth = 960;
             var deskHeight = 680;
 
             if (width < 1000) {
                 var scale = width / 1100;
                 $(".flipbook").css("transform", "scale("+scale+")");
-                // (NOTE: Kode transform shadow dihapus)
             } else {
                  $(".flipbook").css("transform", "scale(1)");
-                 // (NOTE: Kode transform shadow dihapus)
             }
 
             flipbook.turn("display", "double");
             flipbook.turn("size", deskWidth, deskHeight);
-            
-            // (NOTE: Kode shadow opacity dihapus)
         }
       }
 
@@ -112,19 +104,14 @@
       $("#nextBtn").click(function() { flipbook.turn("next"); });
 
       var currentZoom = 1;
-      function updateManualZoom() {
-         $(".flipbook").css("transform", "scale(" + currentZoom + ")");
-         // (NOTE: Update zoom shadow dihapus)
-      }
-
       $("#zoomIn").click(function() {
           currentZoom += 0.1;
-          updateManualZoom();
+          $(".flipbook").css("transform", "scale(" + currentZoom + ")");
       });
       $("#zoomOut").click(function() {
           if(currentZoom > 0.5) {
             currentZoom -= 0.1;
-            updateManualZoom();
+            $(".flipbook").css("transform", "scale(" + currentZoom + ")");
           }
       });
       

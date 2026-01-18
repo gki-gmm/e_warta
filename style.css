@@ -18,7 +18,6 @@ body {
     align-items: center;
 }
 
-/* --- VIEWPORT --- */
 .viewport {
     width: 100%;
     height: 100%;
@@ -29,23 +28,21 @@ body {
     position: relative;
 }
 
-/* (NOTE: .center-shadow YANG LAMA SUDAH DIHAPUS DARI SINI) */
-
-/* --- FLIPBOOK --- */
+/* --- FLIPBOOK CONTAINER --- */
 .flipbook {
     transition: margin-left 0.2s ease-in-out;
     background-color: transparent;
-    /* Bayangan luar buku agar terlihat mengambang */
-    box-shadow: 0 20px 40px rgba(0,0,0,0.6); 
+    /* Bayangan luar agar buku melayang */
+    box-shadow: 0 20px 40px rgba(0,0,0,0.5); 
 }
 
 .flipbook .page {
     background-color: white;
     transform-style: preserve-3d;
-    /* Penting agar inset shadow terlihat di atas gambar */
-    z-index: 1; 
+    position: relative; /* Penting untuk posisi overlay shadow */
 }
 
+/* Gambar mengisi penuh */
 .flipbook img {
     width: 100%;
     height: 100%;
@@ -55,16 +52,70 @@ body {
     pointer-events: none;
     -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
-    /* Gambar ditaruh di belakang bayangan inset */
-    position: relative;
-    z-index: -1; 
 }
 
+/* Sampul Hard Cover (Transparan) */
 .flipbook .hard {
     background: none !important;
 }
 
-/* --- CONTROLS BAR --- */
+/* --- FITUR UTAMA: BAYANGAN DI SETIAP GAMBAR (Overlay) --- */
+
+/* 1. Buat lapisan kosong di ATAS setiap halaman */
+.flipbook .page::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 10; /* Pastikan di atas gambar */
+    pointer-events: none; /* Klik tembus ke bawah */
+    opacity: 1;
+    transition: opacity 0.3s;
+}
+
+/* 2. Aturan Bayangan untuk DESKTOP (Mode 2 Halaman) */
+@media (min-width: 768px) {
+    /* Halaman KIRI (Genap): Bayangan gelap di sisi KANAN (tengah buku) */
+    .flipbook .page.even::after {
+        /* Gradasi dari Transparan -> Hitam di kanan */
+        background: linear-gradient(to right, 
+            rgba(0,0,0,0) 85%, 
+            rgba(0,0,0,0.05) 92%, 
+            rgba(0,0,0,0.3) 100%);
+    }
+
+    /* Halaman KANAN (Ganjil): Bayangan gelap di sisi KIRI (tengah buku) */
+    .flipbook .page.odd::after {
+        /* Gradasi dari Hitam di kiri -> Transparan */
+        background: linear-gradient(to right, 
+            rgba(0,0,0,0.3) 0%, 
+            rgba(0,0,0,0.05) 8%, 
+            rgba(0,0,0,0) 15%);
+    }
+
+    /* Kecuali Cover Depan (P1) tidak perlu bayangan di kiri */
+    .flipbook .page.p1::after {
+        background: none; 
+        /* Opsional: Tambahkan efek kilap cover */
+        background: linear-gradient(-45deg, rgba(255,255,255,0) 40%, rgba(255,255,255,0.2) 50%, rgba(255,255,255,0) 60%);
+    }
+}
+
+/* 3. Aturan Bayangan untuk MOBILE (Mode 1 Halaman) */
+@media (max-width: 767px) {
+    /* Di HP, bayangan jilid dihilangkan agar gambar bersih penuh */
+    .flipbook .page::after {
+        background: none;
+    }
+    /* Atau jika mau efek buku tulis, beri sedikit bayangan di kiri */
+    /* .flipbook .page::after {
+        background: linear-gradient(to right, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0) 5%);
+    } */
+}
+
+/* --- CONTROLS --- */
 .controls {
     position: fixed;
     bottom: 20px;
@@ -100,7 +151,6 @@ body {
     transform: scale(1.1);
 }
 
-/* Loader */
 #loader {
     position: absolute;
     top: 50%;
@@ -112,43 +162,10 @@ body {
     text-transform: uppercase;
 }
 
-/* --- MEDIA QUERY MOBILE --- */
-@media (max-width: 767px) {
+@media (max-width: 600px) {
     .controls {
         bottom: 15px;
-        padding: 5px 15px;
-        gap: 10px;
         width: 90%;
         justify-content: space-around;
-    }
-    /* Di Mobile (1 halaman), hilangkan semua efek bayangan lipatan */
-    .flipbook .page {
-        box-shadow: none !important;
-    }
-    .flipbook {
-        box-shadow: none !important; /* Hilangkan bayangan luar di mobile agar bersih */
-    }
-}
-
-/* --- BARU: REALISTIC GUTTER SHADOW (HANYA DESKTOP) --- */
-@media (min-width: 768px) {
-    /* Halaman GENAP (Kiri) -> Bayangan INSET di sisi KANAN */
-    /* inset x-offset y-offset blur spread color */
-    .flipbook .even {
-        box-shadow: inset -30px 0px 40px -15px rgba(0,0,0,0.5) !important;
-    }
-
-    /* Halaman GANJIL (Kanan) -> Bayangan INSET di sisi KIRI */
-    .flipbook .odd {
-        box-shadow: inset 30px 0px 40px -15px rgba(0,0,0,0.5) !important;
-    }
-
-    /* KECUALIAN: Cover Depan Luar (P1) tidak butuh bayangan di kiri */
-    .flipbook .page.p1 {
-         box-shadow: none !important;
-    }
-    /* KECUALIAN: Cover Belakang Luar (jika ada) */
-    .flipbook .page.p14 { /* Sesuaikan p14 dengan nomor halaman terakhir Anda */
-         box-shadow: none !important;
     }
 }
