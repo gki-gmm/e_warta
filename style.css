@@ -31,18 +31,27 @@ body {
 /* --- FLIPBOOK CONTAINER --- */
 .flipbook {
     transition: margin-left 0.2s ease-in-out;
-    background-color: transparent;
-    /* Bayangan luar agar buku melayang */
-    box-shadow: 0 20px 40px rgba(0,0,0,0.5); 
+    
+    /* 1. SOLUSI CELAH TENGAH (Fake Spine) */
+    /* Kita beri garis gelap di tengah background container */
+    /* Jadi saat kertas 'menganga' sedikit, yang terlihat adalah gelap (jilid) */
+    background: linear-gradient(to right, 
+        rgba(0,0,0,0) 46%, 
+        rgba(0,0,0,0.5) 50%, /* Gelap pekat di tengah persis */
+        rgba(0,0,0,0) 54%
+    );
+
+    /* Bayangan luar (Drop Shadow) agar buku melayang */
+    box-shadow: 0 20px 50px rgba(0,0,0,0.6); 
 }
 
 .flipbook .page {
     background-color: white;
     transform-style: preserve-3d;
-    position: relative; /* Penting untuk posisi overlay shadow */
+    position: relative;
+    z-index: 1;
 }
 
-/* Gambar mengisi penuh */
 .flipbook img {
     width: 100%;
     height: 100%;
@@ -54,14 +63,13 @@ body {
     backface-visibility: hidden;
 }
 
-/* Sampul Hard Cover (Transparan) */
+/* Hard Cover tetap transparan */
 .flipbook .hard {
     background: none !important;
 }
 
-/* --- FITUR UTAMA: BAYANGAN DI SETIAP GAMBAR (Overlay) --- */
+/* --- PERBAIKAN SHADOW HALAMAN (OVERLAY) --- */
 
-/* 1. Buat lapisan kosong di ATAS setiap halaman */
 .flipbook .page::after {
     content: "";
     position: absolute;
@@ -69,50 +77,50 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    z-index: 10; /* Pastikan di atas gambar */
-    pointer-events: none; /* Klik tembus ke bawah */
+    z-index: 10; 
+    pointer-events: none; 
     opacity: 1;
     transition: opacity 0.3s;
 }
 
-/* 2. Aturan Bayangan untuk DESKTOP (Mode 2 Halaman) */
+/* DESKTOP MODE (2 Halaman) */
 @media (min-width: 768px) {
-    /* Halaman KIRI (Genap): Bayangan gelap di sisi KANAN (tengah buku) */
+    
+    /* 2. SOLUSI SHADOW TERLALU LEBAR */
+    /* Saya kurangi area gradasi dari 15% menjadi 5% - 7% saja */
+
+    /* Halaman KIRI (Genap) -> Shadow tipis di KANAN */
     .flipbook .page.even::after {
-        /* Gradasi dari Transparan -> Hitam di kanan */
         background: linear-gradient(to right, 
-            rgba(0,0,0,0) 85%, 
-            rgba(0,0,0,0.05) 92%, 
-            rgba(0,0,0,0.3) 100%);
+            rgba(0,0,0,0) 93%,  /* Mulai gelap di 93% */
+            rgba(0,0,0,0.2) 100% /* Gelap di ujung kanan */
+        );
     }
 
-    /* Halaman KANAN (Ganjil): Bayangan gelap di sisi KIRI (tengah buku) */
+    /* Halaman KANAN (Ganjil) -> Shadow tipis di KIRI */
     .flipbook .page.odd::after {
-        /* Gradasi dari Hitam di kiri -> Transparan */
         background: linear-gradient(to right, 
-            rgba(0,0,0,0.3) 0%, 
-            rgba(0,0,0,0.05) 8%, 
-            rgba(0,0,0,0) 15%);
+            rgba(0,0,0,0.2) 0%, /* Gelap di ujung kiri */
+            rgba(0,0,0,0) 7%    /* Hilang di 7% */
+        );
     }
 
-    /* Kecuali Cover Depan (P1) tidak perlu bayangan di kiri */
+    /* Cover Depan (P1) kilap saja, tanpa shadow hitam */
     .flipbook .page.p1::after {
-        background: none; 
-        /* Opsional: Tambahkan efek kilap cover */
-        background: linear-gradient(-45deg, rgba(255,255,255,0) 40%, rgba(255,255,255,0.2) 50%, rgba(255,255,255,0) 60%);
+        background: linear-gradient(-45deg, rgba(255,255,255,0) 40%, rgba(255,255,255,0.1) 50%, rgba(255,255,255,0) 60%);
     }
 }
 
-/* 3. Aturan Bayangan untuk MOBILE (Mode 1 Halaman) */
+/* MOBILE MODE (1 Halaman) */
 @media (max-width: 767px) {
-    /* Di HP, bayangan jilid dihilangkan agar gambar bersih penuh */
+    /* Di Mobile, shadow jilid & shadow container dihilangkan agar bersih */
     .flipbook .page::after {
         background: none;
     }
-    /* Atau jika mau efek buku tulis, beri sedikit bayangan di kiri */
-    /* .flipbook .page::after {
-        background: linear-gradient(to right, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0) 5%);
-    } */
+    .flipbook {
+        background: none; /* Hilangkan garis jilid di mobile */
+        box-shadow: none;
+    }
 }
 
 /* --- CONTROLS --- */
