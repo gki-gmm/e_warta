@@ -58,8 +58,8 @@ body {
 .shadow-wrapper {
     position: absolute;
     top: 50%; left: 50%;
-    padding-left: 15vh;
-    padding-right: 15vh;
+    margin-left: 15vh;
+    margin-right: 15vh;
     transform: translate(-50%, -50%);
     width: 960px; height: 680px; /* Area shadow */
     z-index: -1;
