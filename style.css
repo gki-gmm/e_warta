@@ -9,7 +9,7 @@
 }
 
 body {
-    background: #f0f0f0; /* Background terang bersih */
+    background: #f0f0f0;
     overflow: hidden;
     height: 100vh;
     width: 100vw;
@@ -21,200 +21,122 @@ body {
 /* --- LOADER --- */
 #loader-overlay {
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background: #f0f0f0;
-    z-index: 9999;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+    top: 0; left: 0; width: 100vw; height: 100vh;
+    background: #f0f0f0; z-index: 9999;
+    display: flex; flex-direction: column; justify-content: center; align-items: center;
     transition: opacity 0.5s ease-out;
 }
-
 .spinner {
-    width: 50px;
-    height: 50px;
-    border: 3px solid rgba(0,0,0,0.1);
-    border-radius: 50%;
-    border-top-color: #333;
-    animation: spin 1s ease-in-out infinite;
-    margin-bottom: 20px;
+    width: 50px; height: 50px; border: 3px solid rgba(0,0,0,0.1);
+    border-radius: 50%; border-top-color: #333;
+    animation: spin 1s ease-in-out infinite; margin-bottom: 20px;
 }
-
 .loading-text {
-    color: #333;
-    font-size: 14px;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    font-weight: 300;
-    animation: pulse 1.5s infinite;
+    color: #333; font-size: 14px; letter-spacing: 3px;
+    text-transform: uppercase; font-weight: 300; animation: pulse 1.5s infinite;
 }
+@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes pulse { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; } }
 
-@keyframes spin {
-    to { transform: rotate(360deg); }
-}
-
-@keyframes pulse {
-    0% { opacity: 0.5; }
-    50% { opacity: 1; }
-    100% { opacity: 0.5; }
-}
-
-/* --- VIEWPORT & CONTAINER BUKU --- */
+/* --- VIEWPORT --- */
 .viewport {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    width: 100%; height: 100%;
+    display: flex; justify-content: center; align-items: center;
     position: relative;
 }
 
-/* Container untuk membungkus buku dan bayangannya */
+/* Container Utama */
 .book-container {
     position: relative;
-    width: 960px;
-    height: 680px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    width: 960px; height: 680px;
+    display: flex; justify-content: center; align-items: center;
     transition: transform 0.2s ease;
 }
 
-/* --- GAMBAR CUSTOM SHADOW --- */
-.custom-shadow {
+/* --- LOGIKA 3 JENIS SHADOW --- */
+/* Wrapper untuk menumpuk semua shadow */
+.shadow-wrapper {
     position: absolute;
-    top: 50%;
-    left: 50%;
-    /* Ukuran shadow sedikit lebih besar dari buku */
-    width: 1060px;  
-    height: 740px; 
+    top: 50%; left: 50%;
     transform: translate(-50%, -50%);
-    z-index: -1; /* Di belakang buku */
-    
-    opacity: 0; /* Default: SEMBUNYI (saat cover tertutup) */
-    transition: opacity 0.6s ease-in-out;
+    width: 1060px; height: 740px; /* Area shadow */
+    z-index: -1;
     pointer-events: none;
 }
 
-/* Kelas ini ditambahkan JS saat buku terbuka */
-.custom-shadow.show {
-    opacity: 1; /* MUNCUL */
+/* Style umum untuk ketiga gambar shadow */
+.shadow-item {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%; height: 100%; /* Mengikuti wrapper */
+    object-fit: contain; /* Agar rasio gambar shadow terjaga */
+    opacity: 0; /* Semua sembunyi dulu */
+    transition: opacity 0.6s ease-in-out; /* Efek transisi halus */
+}
+
+/* Class aktif untuk memunculkan shadow */
+.shadow-item.active {
+    opacity: 1;
 }
 
 /* --- FLIPBOOK --- */
 .flipbook {
     transition: margin-left 0.2s ease-in-out;
-    background: none;
-    box-shadow: none; /* Kita pakai gambar shadow custom */
-    
-    opacity: 0;
-    visibility: hidden;
+    background: none; box-shadow: none;
+    opacity: 0; visibility: hidden;
     transition: opacity 1s ease-in-out;
 }
+.flipbook.loaded { opacity: 1; visibility: visible; }
 
-.flipbook.loaded {
-    opacity: 1;
-    visibility: visible;
-}
-
-/* LOGIKA SPINE TENGAH (Garis Jilid) */
+/* Garis Tengah (Spine) */
 .flipbook.show-spine {
     background: linear-gradient(to right, rgba(0,0,0,0) 48%, rgba(0,0,0,0.15) 50%, rgba(0,0,0,0) 52%);
 }
 
 .flipbook .page {
-    background-color: white;
-    transform-style: preserve-3d;
-    position: relative;
-    z-index: 1;
+    background-color: white; transform-style: preserve-3d;
+    position: relative; z-index: 1;
 }
 
 .flipbook img {
-    width: 100%;
-    height: 100%;
-    object-fit: fill; 
-    display: block;
-    user-select: none;
-    pointer-events: none;
-    -webkit-backface-visibility: hidden;
-    backface-visibility: hidden;
+    width: 100%; height: 100%; object-fit: fill;
+    display: block; user-select: none; pointer-events: none;
+    -webkit-backface-visibility: hidden; backface-visibility: hidden;
 }
+.flipbook .hard { background: none !important; }
 
-.flipbook .hard {
-    background: none !important;
-}
-
-/* --- OVERLAY SHADOW HALAMAN (Untuk efek lipatan realistis) --- */
+/* Overlay Shadow Halaman (Lipatan) */
 .flipbook .page::after {
-    content: "";
-    position: absolute;
-    top: 0; left: 0; width: 100%; height: 100%;
-    z-index: 10; pointer-events: none; 
-    opacity: 1; transition: opacity 0.3s;
+    content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    z-index: 10; pointer-events: none; opacity: 1; transition: opacity 0.3s;
 }
 
-/* Mode Desktop */
 @media (min-width: 768px) {
     .flipbook .page.even::after { background: linear-gradient(to right, rgba(0,0,0,0) 95%, rgba(0,0,0,0.1) 100%); }
     .flipbook .page.odd::after { background: linear-gradient(to right, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0) 5%); }
-    
-    /* Cover Depan & Belakang tidak perlu shadow lipatan */
     .flipbook .page.p1::after { background: none; }
-    /* Pastikan halaman terakhir (p14/back cover) tidak ada shadow */
     .flipbook .page.last::after { background: none; } 
 }
 
-/* Mode Mobile */
 @media (max-width: 767px) {
     .flipbook .page::after { background: none; }
-    /* Di HP, gambar shadow disembunyikan total */
-    .custom-shadow { display: none !important; }
+    /* Di Mobile, sembunyikan semua shadow custom agar tidak berat/aneh */
+    .shadow-wrapper { display: none !important; }
     .book-container { width: auto; height: auto; }
 }
 
 /* --- CONTROLS --- */
 .controls {
-    background: rgba(0, 0, 0, 0.7);
-    color: white;
-    position: fixed;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    padding: 8px 20px;
-    border-radius: 50px;
-    display: flex;
-    gap: 15px;
-    z-index: 999;
+    background: rgba(0, 0, 0, 0.7); color: white;
+    position: fixed; bottom: 20px; left: 50%;
+    transform: translateX(-50%); padding: 8px 20px;
+    border-radius: 50px; display: flex; gap: 15px; z-index: 999;
 }
-
 .btn {
-    background: none;
-    border: none;
-    color: white;
-    font-size: 16px;
-    cursor: pointer;
-    transition: 0.2s;
-    width: 35px;
-    height: 35px;
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    background: none; border: none; color: white; font-size: 16px;
+    cursor: pointer; transition: 0.2s; width: 35px; height: 35px;
+    display: flex; justify-content: center; align-items: center;
 }
-
-.btn:hover {
-    background: rgba(255, 255, 255, 0.2);
-    transform: scale(1.1);
-}
-
-@media (max-width: 600px) {
-    .controls {
-        bottom: 15px;
-        width: 90%;
-        justify-content: space-around;
-    }
-}
+.btn:hover { background: rgba(255, 255, 255, 0.2); transform: scale(1.1); }
+@media (max-width: 600px) { .controls { bottom: 15px; width: 90%; justify-content: space-around; } }
