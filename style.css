@@ -89,8 +89,8 @@ body {
 /* Biasanya Cover ada di KANAN atau TENGAH, tergantung gambar shadow kamu */
 .shadow-front {
     /* Atur lebar dan tinggi gambar shadow */
-    width: 500px;   /* Coba mainkan angka ini */
-    height: 700px;  
+    width: 480px;   /* Coba mainkan angka ini */
+    height: 680px;  
     
     /* Atur posisi: */
     top: 50%;       /* Jarak dari atas (50% = tengah vertikal) */
@@ -105,7 +105,7 @@ body {
 .shadow-flip {
     /* Lebar shadow terbuka harus lebih lebar dari bukunya (960px) */
     width: 1100px;  
-    height: 750px;
+    height: 680px;
     
     top: 50%;
     left: 50%;      /* Pas di tengah */
@@ -116,8 +116,8 @@ body {
 /* 3. POSISI SHADOW BELAKANG (BACK COVER) */
 /* Biasanya Cover Belakang ada di KIRI */
 .shadow-back {
-    width: 500px;
-    height: 700px;
+    width: 480px;
+    height: 680px;
     
     top: 50%;
     left: 25%;      /* 25% artinya geser ke KIRI */
