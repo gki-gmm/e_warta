@@ -46,7 +46,7 @@ body {
 }
 
 .flipbook .page {
-    background-color: white;
+    background-color: transparent;
     transform-style: preserve-3d;
     position: relative;
     z-index: 1;
