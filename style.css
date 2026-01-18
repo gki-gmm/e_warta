@@ -8,51 +8,58 @@
 }
 
 body {
-    display: grid;
-    place-content: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     height: 100vh;
     width: 100vw;
     overflow: hidden;
-    background: #f1c40f;
+    background: #333; /* Background gelap agar buku lebih kontras */
 }
 
 .flipbook {
-    width: 1000px;
-    height: 600px;
-    /* Hilangkan background container agar tidak terlihat warna di balik gambar */
-    background: transparent; 
+    /* Rasio A4 (Total 2 halaman berdampingan) */
+    width: 990px;  
+    height: 700px;
+    
+    /* Sembunyikan dulu sampai semua gambar diload JS */
+    visibility: hidden; 
+    
+    background: transparent;
+    -webkit-transition: margin-left 0.2s ease-in-out;
+    -moz-transition: margin-left 0.2s ease-in-out;
+    -o-transition: margin-left 0.2s ease-in-out;
+    -ms-transition: margin-left 0.2s ease-in-out;
+    transition: margin-left 0.2s ease-in-out;
 }
 
-/* 1. Reset Container Halaman */
 .flipbook .page,
 .flipbook .hard,
 .flipbook div {
     width: 100%;
     height: 100%;
-    margin: 0 !important;   /* Pastikan tidak ada margin */
-    padding: 0 !important;  /* Pastikan tidak ada padding */
-    border: none !important; /* Hilangkan border garis */
-    overflow: hidden;       /* Potong gambar jika kelebihan sedikit */
-    background-color: white; /* Warna dasar kertas jika gambar gagal muat */
+    background-color: white;
+    overflow: hidden;
 }
 
-/* 2. Paksa Gambar Memenuhi Halaman */
 .flipbook img {
     width: 100%;
     height: 100%;
     
-    /* PENTING: Pilih salah satu mode di bawah ini */
-    
-    /* Opsi A (Rekomendasi): Gambar ditarik paksa agar pas 100% (mungkin sedikit gepeng jika rasio beda) */
+    /* Gunakan Fill agar memaksa gambar mengikuti rasio A4 */
     object-fit: fill; 
     
-    /* Opsi B: Gambar dipotong agar pas (tidak gepeng, tapi pinggiran gambar mungkin terpotong) */
-    /* object-fit: cover; */
+    display: block;
     
-    display: block; /* Menghilangkan celah putih kecil di bawah gambar */
+    /* OPTIMASI PERFORMA AGAR TIDAK KEDIP PUTIH */
+    -webkit-user-select: none; /* Mencegah blok biru saat drag */
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    -webkit-user-drag: none;
+    pointer-events: none; /* Mencegah gambar di-drag ghosting */
 }
 
-/* Khusus Sampul Hard Cover - Hapus warna merah */
 .flipbook .hard {
-    background: none !important; 
+    background: none !important;
 }

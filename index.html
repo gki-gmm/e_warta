@@ -10,13 +10,8 @@
 
 <body>
   <div class="flipbook">
-    <div>
-      <img src="images/cover1.webp" alt="Sampul Depan Luar" />
-    </div>
-    
-    <div class="hard">
-      <img src="images/cover2.webp" alt="Sampul Depan Dalam" />
-    </div>
+    <div><img src="images/cover1.webp" alt="" /></div>
+    <div class="hard"><img src="images/cover2.webp" alt="" /></div>
     
     <div><img src="images/page1.webp" alt="" /></div>
     <div><img src="images/page2.webp" alt="" /></div>
@@ -31,38 +26,53 @@
     <div><img src="images/page11.webp" alt="" /></div>
     <div><img src="images/page12.webp" alt="" /></div>
     
-    <div class="hard">
-      <img src="images/back2.webp" alt="Sampul Belakang Dalam" />
-    </div>
-
+    <div class="hard"><img src="images/back2.webp" alt="" /></div>
     </div>
 
   <script src="jquery.js"></script>
   <script src="turn.js"></script>
   
   <script>
-    $(document).ready(function() {
-      // Inisialisasi Flipbook
+    // Gunakan window load agar gambar ready dulu (mencegah blink putih)
+    $(window).on('load', function() {
+      
+      // Munculkan flipbook setelah siap
+      $(".flipbook").css("visibility", "visible");
+
       $(".flipbook").turn({
-        width: 1000,
-        height: 600,
+        // Ukuran A4 Landscape Spread (495px x 2 = 990px)
+        width: 990,
+        height: 700,
+        
+        // PENTING: Agar animasi halus & ada bayangan
         autoCenter: true,
-        duration: 1000
+        acceleration: true, // Wajib true untuk performa
+        gradients: true,    // Efek bayangan lipatan kertas
+        elevation: 50,      // Memberi kesan tumpukan kertas
+        duration: 1500      // Durasi diperlambat sedikit agar elegan
       });
 
-      // Fitur Navigasi Klik & Keyboard
+      // Kontrol Klik Mouse & Keyboard
+      $(document).keydown(function(e){
+        var previous = 37, next = 39;
+        switch (e.keyCode) {
+          case previous:
+            $('.flipbook').turn('previous');
+            break;
+          case next:
+            $('.flipbook').turn('next');
+            break;
+        }
+      });
+
       $(".flipbook").click(function(e) {
         var offset = $(this).offset();
+        // Deteksi klik kiri atau kanan
         if (e.pageX - offset.left < $(this).width() / 2) {
            $(this).turn("previous");
         } else {
            $(this).turn("next");
         }
-      });
-      
-      $(window).bind('keydown', function(e){
-        if (e.keyCode==37) $('.flipbook').turn('previous');
-        else if (e.keyCode==39) $('.flipbook').turn('next');
       });
     });
   </script>
