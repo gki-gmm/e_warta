@@ -120,7 +120,7 @@ body {
     height: 680px;
     
     top: 50%;
-    left: 25%;      /* 25% artinya geser ke KIRI */
+    left: 45%;      /* 25% artinya geser ke KIRI */
     
     transform: translate(-50%, -50%);
 }
