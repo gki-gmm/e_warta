@@ -2,34 +2,43 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <link rel="stylesheet" href="style.css" />
-  <title>Warta Jemaat</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <title>Warta Jemaat Digital</title>
 </head>
 
 <body>
 
-  <div id="loader">Sedang memuat buku...</div>
+  <div id="loader">Loading Experience...</div>
 
-  <div class="flipbook">
-    <div class="page" style="background-image:url('images/cover1.webp')"></div>
-    
-    <div class="hard" style="background-image:url('images/cover2.webp')"></div>
-    
-    <div class="page" style="background-image:url('images/page1.webp')"></div>
-    <div class="page" style="background-image:url('images/page2.webp')"></div>
-    <div class="page" style="background-image:url('images/page3.webp')"></div>
-    <div class="page" style="background-image:url('images/page4.webp')"></div>
-    <div class="page" style="background-image:url('images/page5.webp')"></div>
-    <div class="page" style="background-image:url('images/page6.webp')"></div>
-    <div class="page" style="background-image:url('images/page7.webp')"></div>
-    <div class="page" style="background-image:url('images/page8.webp')"></div>
-    <div class="page" style="background-image:url('images/page9.webp')"></div>
-    <div class="page" style="background-image:url('images/page10.webp')"></div>
-    <div class="page" style="background-image:url('images/page11.webp')"></div>
-    <div class="page" style="background-image:url('images/page12.webp')"></div>
-    
-    <div class="hard" style="background-image:url('images/back2.webp')"></div>
+  <div class="viewport">
+    <div class="flipbook">
+      <div class="hard"><img src="images/cover1.webp" alt="" /></div>
+      <div class="hard"><img src="images/cover2.webp" alt="" /></div>
+      
+      <div><img src="images/page1.webp" alt="" /></div>
+      <div><img src="images/page2.webp" alt="" /></div>
+      <div><img src="images/page3.webp" alt="" /></div>
+      <div><img src="images/page4.webp" alt="" /></div>
+      <div><img src="images/page5.webp" alt="" /></div>
+      <div><img src="images/page6.webp" alt="" /></div>
+      <div><img src="images/page7.webp" alt="" /></div>
+      <div><img src="images/page8.webp" alt="" /></div>
+      <div><img src="images/page9.webp" alt="" /></div>
+      <div><img src="images/page10.webp" alt="" /></div>
+      <div><img src="images/page11.webp" alt="" /></div>
+      <div><img src="images/page12.webp" alt="" /></div>
+      
+      <div class="hard"><img src="images/back2.webp" alt="" /></div>
+    </div>
+  </div>
+
+  <div class="controls">
+    <button class="btn" id="prevBtn" title="Sebelumnya"><i class="fa-solid fa-chevron-left"></i></button>
+    <button class="btn" id="zoomOut" title="Zoom Out"><i class="fa-solid fa-minus"></i></button>
+    <button class="btn" id="zoomIn" title="Zoom In"><i class="fa-solid fa-plus"></i></button>
+    <button class="btn" id="nextBtn" title="Selanjutnya"><i class="fa-solid fa-chevron-right"></i></button>
   </div>
 
   <script src="jquery.js"></script>
@@ -38,33 +47,85 @@
   <script>
     $(window).on('load', function() {
       $("#loader").fadeOut();
-      $(".flipbook").css("visibility", "visible");
 
-      $(".flipbook").turn({
+      var flipbook = $(".flipbook");
+      
+      flipbook.turn({
         width: 960,
         height: 680,
         autoCenter: true,
-        acceleration: true, // Wajib ON
-        gradients: true,    // Wajib ON untuk efek bayangan realistik
+        acceleration: true,
+        gradients: true,
+        duration: 1000,
         elevation: 50,
-        duration: 1000
-      });
-
-      // Navigasi Klik
-      $(".flipbook").click(function(e) {
-        var offset = $(this).offset();
-        // Klik area kiri atau kanan
-        if (e.pageX - offset.left < $(this).width() * 0.3) {
-           $(this).turn("previous");
-        } else if (e.pageX - offset.left > $(this).width() * 0.7) {
-           $(this).turn("next");
+        when: {
+            turning: function(e, page, view) {
+                // Mainkan suara jika ada (uncomment baris di bawah)
+                // var audio = document.getElementById("pageSound");
+                // if(audio) { audio.currentTime = 0; audio.play(); }
+            }
         }
       });
+
+      // --- LOGIKA MODERN CONTROL ---
       
-      // Navigasi Keyboard
+      // 1. Tombol Navigasi
+      $("#prevBtn").click(function() { flipbook.turn("previous"); });
+      $("#nextBtn").click(function() { flipbook.turn("next"); });
+
+      // 2. Tombol Zoom (Scaling)
+      var currentScale = 1;
+      
+      function updateScale() {
+        $(".flipbook").css("transform", "scale(" + currentScale + ")");
+      }
+
+      $("#zoomIn").click(function() {
+         if(currentScale < 1.5) {
+             currentScale += 0.1;
+             updateScale();
+         }
+      });
+
+      $("#zoomOut").click(function() {
+         if(currentScale > 0.5) {
+             currentScale -= 0.1;
+             updateScale();
+         }
+      });
+
+      // 3. Auto Resize (Responsif)
+      // Fitur ini membuat buku mengecil otomatis jika layar browser dikecilkan
+      function resizeBook() {
+         var winWidth = $(window).width();
+         var winHeight = $(window).height();
+         var bookWidth = 960;
+         var bookHeight = 680;
+         
+         // Hitung rasio agar muat di layar
+         var scaleX = (winWidth * 0.9) / bookWidth;
+         var scaleY = (winHeight * 0.8) / bookHeight;
+         
+         // Ambil skala terkecil agar tidak terpotong
+         var scale = Math.min(scaleX, scaleY);
+         
+         if (scale < 1) {
+             currentScale = scale;
+             updateScale();
+         } else {
+             currentScale = 1; // Reset ke ukuran asli jika layar besar
+             updateScale();
+         }
+      }
+
+      // Jalankan resize saat loading dan saat window diubah ukurannya
+      resizeBook();
+      $(window).resize(resizeBook);
+
+      // Keyboard
       $(document).keydown(function(e){
-        if (e.keyCode == 37) $('.flipbook').turn('previous');
-        if (e.keyCode == 39) $('.flipbook').turn('next');
+        if (e.keyCode == 37) flipbook.turn('previous');
+        if (e.keyCode == 39) flipbook.turn('next');
       });
     });
   </script>

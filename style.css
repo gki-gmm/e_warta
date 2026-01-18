@@ -1,66 +1,122 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css');
 
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
 }
 
 body {
+    background: #1a1a1a; /* Dark Elegant Background */
+    overflow: hidden;
+    height: 100vh;
+    width: 100vw;
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
-    width: 100vw;
-    overflow: hidden;
-    background: #333; 
 }
 
-#loader {
-    position: absolute;
-    color: white;
-    font-size: 18px;
-    z-index: 99;
+/* --- WADAH UTAMA (VIEWPORT) --- */
+/* Ini trik agar buku bisa di-zoom in/out otomatis */
+.viewport {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
 }
 
 .flipbook {
     width: 960px;
     height: 680px;
-    visibility: hidden;
-    background: transparent;
-    /* Bayangan di bawah buku saja */
-    box-shadow: 0 15px 30px rgba(0,0,0,0.4);
+    /* Bayangan Realistis (Soft Shadow) */
+    box-shadow: 0 30px 60px rgba(0,0,0,0.5); 
+    transition: transform 0.3s ease; /* Smooth zoom handling */
 }
 
-/* --- LOGIKA UTAMA: BACKGROUND IMAGE --- */
-
-.flipbook .page,
-.flipbook .hard,
-.flipbook div {
-    /* 1. Atur gambar agar selalu memenuhi kotak */
-    background-repeat: no-repeat;
-    background-size: 100% 100%; 
-    background-position: center;
-    
-    /* 2. Warna dasar putih (jika gambar loading) */
-    background-color: #fff;
-    
-    /* 3. Render GPU untuk performa maksimal */
-    -webkit-transform-style: preserve-3d;
-    transform-style: preserve-3d;
-    will-change: transform; 
-}
-
-/* Khusus Hard Cover */
-.flipbook .hard {
-    /* Pastikan tidak ada border atau warna lain yang mengganggu */
-    border: none !important;
-}
-
-/* Menghilangkan seleksi biru yang mengganggu */
-.flipbook div,
 .flipbook .page {
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    user-select: none;
+    background-color: white;
+    /* Optimasi 3D Hardware */
+    transform-style: preserve-3d;
+    -webkit-transform-style: preserve-3d;
 }
+
+.flipbook img {
+    width: 100%;
+    height: 100%;
+    object-fit: fill; 
+    display: block;
+    user-select: none;
+    pointer-events: none;
+    /* Hapus kedip putih */
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+}
+
+/* Hard Cover Transparan */
+.flipbook .hard {
+    background: none !important;
+}
+
+/* --- CONTROLS BAR (MODERN) --- */
+.controls {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(255, 255, 255, 0.1); /* Transparan */
+    backdrop-filter: blur(10px); /* Efek Kaca (Glassmorphism) */
+    padding: 10px 25px;
+    border-radius: 50px;
+    display: flex;
+    gap: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    z-index: 999;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+}
+
+.btn {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 18px;
+    cursor: pointer;
+    transition: 0.2s;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: scale(1.1);
+}
+
+.btn:active {
+    transform: scale(0.9);
+}
+
+/* Loader */
+#loader {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-size: 14px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    0% { opacity: 0.5; }
+    50% { opacity: 1; }
+    100% { opacity: 0.5; }
+}   
