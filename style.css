@@ -118,25 +118,16 @@ body {
 
 @media (max-width: 767px) {
     .flipbook .page::after { background: none; }
+    /* Di Mobile, sembunyikan semua shadow custom agar tidak berat/aneh */
+    .book-container { width: auto; height: auto; }
+}
 
-    /* --- PERBAIKAN MOBILE --- */
-    .book-container {
-        /* 1. Sesuaikan ukuran agar muat di layar HP */
-        width: 95%;          /* Lebar hampir penuh layar */
-        height: 65vh;        /* Tinggi disesuaikan 65% dari tinggi layar (bukan 680px) */
-        
-        /* 2. Geser ke atas (Semakin besar angka margin-bottom, semakin naik) */
-        margin-bottom: 100px; 
-        
-        /* Pastikan konten tidak tumpah */
-        overflow: hidden;
-    }
-    
-    /* Opsional: Perkecil kontrol di mobile agar tidak menutupi buku */
-    .controls {
-        bottom: 10px;
-        padding: 5px 15px;
-    }
+/* --- CONTROLS --- */
+.controls {
+    background: rgba(0, 0, 0, 0.7); color: white;
+    position: fixed; bottom: 20px; left: 50%;
+    transform: translateX(-50%); padding: 8px 20px;
+    border-radius: 50px; display: flex; gap: 15px; z-index: 999;
 }
 .btn {
     background: none; border: none; color: white; font-size: 16px;
