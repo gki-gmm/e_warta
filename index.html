@@ -10,9 +10,12 @@
 
 <body>
 
-  <div id="loader">Memuat Warta Jemaat...</div>
+  <div id="loader">Menyiapkan Tampilan...</div>
 
   <div class="viewport">
+    
+    <div class="center-shadow"></div>
+
     <div class="flipbook">
       <div class="hard"><img src="images/cover1.webp" alt="" /></div>
       <div class="hard"><img src="images/cover2.webp" alt="" /></div>
@@ -49,8 +52,9 @@
     $(window).on('load', function() {
       $("#loader").fadeOut();
       var flipbook = $(".flipbook");
+      var shadow = $(".center-shadow"); // Ambil elemen shadow
 
-      // 1. Inisialisasi awal (Default ukuran desktop dulu)
+      // Inisialisasi
       flipbook.turn({
         width: 960,
         height: 680,
@@ -61,82 +65,78 @@
         duration: 1000
       });
 
-      // 2. FUNGSI CERDAS: Resize & Switch Mode
+      // FUNGSI CERDAS: Resize & Switch Mode & Shadow Control
       function resizeViewport() {
         var width = $(window).width();
         var height = $(window).height();
 
-        // Batas Mobile vs Desktop (768px)
         if (width < 768) {
             // --- MODE MOBILE (1 Halaman) ---
-            
-            // Hitung ukuran: Ambil 90% lebar layar
             var mobileWidth = width * 0.95;
-            // Hitung tinggi berdasarkan rasio A4 (Width * 1.414)
             var mobileHeight = mobileWidth * 1.414;
-            
-            // Jangan biarkan tinggi melebihi layar
             if(mobileHeight > height * 0.9) {
                 mobileHeight = height * 0.9;
                 mobileWidth = mobileHeight / 1.414;
             }
 
-            // Ubah mode ke SINGLE
             flipbook.turn("display", "single");
-            
-            // Set ukuran baru
             flipbook.turn("size", mobileWidth, mobileHeight);
+            $(".flipbook").css("transform", "scale(1)");
+            
+            // HILANGKAN SHADOW DI MOBILE
+            shadow.css("opacity", 0);
             
         } else {
             // --- MODE DESKTOP (2 Halaman) ---
-            
-            // Ukuran standar spread A4
             var deskWidth = 960;
             var deskHeight = 680;
 
-            // Jika layar desktop kecil, kecilkan proporsional (Zoom Out)
             if (width < 1000) {
                 var scale = width / 1100;
-                // Kita gunakan transformasi CSS untuk desktop scaling agar performa lebih baik
                 $(".flipbook").css("transform", "scale("+scale+")");
+                // Sesuaikan juga skala shadow agar pas
+                shadow.css("transform", "translate(-50%, -50%) scale("+scale+")");
             } else {
                  $(".flipbook").css("transform", "scale(1)");
+                 shadow.css("transform", "translate(-50%, -50%) scale(1)");
             }
 
-            // Kembalikan ke DOUBLE spread
             flipbook.turn("display", "double");
-            
-            // Reset ukuran ke standar desktop
             flipbook.turn("size", deskWidth, deskHeight);
+            
+            // MUNCULKAN SHADOW DI DESKTOP
+            shadow.css("opacity", 1);
         }
       }
 
-      // Jalankan fungsi resize saat pertama kali load
       resizeViewport();
+      $(window).resize(resizeViewport);
 
-      // Jalankan fungsi resize setiap kali layar diubah ukurannya/HP diputar
-      $(window).resize(function() {
-         resizeViewport();
-      });
-
-      // 3. Tombol Navigasi
+      // Controls
       $("#prevBtn").click(function() { flipbook.turn("previous"); });
       $("#nextBtn").click(function() { flipbook.turn("next"); });
 
-      // 4. Zoom Manual (Opsional)
       var currentZoom = 1;
+      // Saat zoom manual, shadow juga harus ikut di-zoom
+      function updateManualZoom() {
+         $(".flipbook").css("transform", "scale(" + currentZoom + ")");
+         // Hanya zoom shadow jika di mode desktop (opacity 1)
+         if (shadow.css("opacity") == 1) {
+            shadow.css("transform", "translate(-50%, -50%) scale(" + currentZoom + ")");
+         }
+      }
+
       $("#zoomIn").click(function() {
           currentZoom += 0.1;
-          $(".flipbook").css("transform", "scale(" + currentZoom + ")");
+          updateManualZoom();
       });
       $("#zoomOut").click(function() {
           if(currentZoom > 0.5) {
             currentZoom -= 0.1;
-            $(".flipbook").css("transform", "scale(" + currentZoom + ")");
+            updateManualZoom();
           }
       });
       
-      // Keyboard
       $(document).keydown(function(e){
         if (e.keyCode == 37) flipbook.turn('previous');
         if (e.keyCode == 39) flipbook.turn('next');

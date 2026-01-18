@@ -10,7 +10,7 @@
 
 body {
     background: #1a1a1a;
-    overflow: hidden; /* Mencegah scroll browser default */
+    overflow: hidden;
     height: 100vh;
     width: 100vw;
     display: flex;
@@ -18,7 +18,6 @@ body {
     align-items: center;
 }
 
-/* --- VIEWPORT --- */
 .viewport {
     width: 100%;
     height: 100%;
@@ -26,10 +25,39 @@ body {
     justify-content: center;
     align-items: center;
     overflow: hidden;
+    position: relative; /* Penting untuk posisi shadow */
 }
 
+/* --- BARU: BAYANGAN GARIS TENGAH BUKU --- */
+.center-shadow {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    /* Lebar bayangan, sesuaikan jika ingin lebih lebar/sempit */
+    width: 100px; 
+    /* Tinggi mengikuti tinggi buku (sedikit lebih kecil agar rapi) */
+    height: 670px; 
+    transform: translate(-50%, -50%); /* Posisi tepat di tengah */
+    
+    /* Gradasi Halus: Transparan -> Hitam Pudar di tengah -> Transparan */
+    background: linear-gradient(90deg, 
+        transparent 0%, 
+        rgba(0,0,0,0.05) 35%,
+        rgba(0,0,0,0.25) 50%, /* Titik tergelap di tengah */
+        rgba(0,0,0,0.05) 65%,
+        transparent 100%
+    );
+    
+    z-index: 20; /* Di atas halaman buku */
+    pointer-events: none; /* PENTING: Agar klik tembus ke buku di bawahnya */
+    
+    /* Default hidden, nanti dimunculkan JS jika mode desktop */
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+/* --- FLIPBOOK --- */
 .flipbook {
-    /* Ukuran Default Desktop akan di-handle oleh JS */
     transition: margin-left 0.2s ease-in-out;
     background-color: transparent;
 }
@@ -42,7 +70,6 @@ body {
 .flipbook img {
     width: 100%;
     height: 100%;
-    /* Gunakan Fill agar pas di kotak yang disediakan */
     object-fit: fill; 
     display: block;
     user-select: none;
@@ -91,7 +118,6 @@ body {
     transform: scale(1.1);
 }
 
-/* Loader */
 #loader {
     position: absolute;
     top: 50%;
@@ -103,7 +129,6 @@ body {
     text-transform: uppercase;
 }
 
-/* --- MEDIA QUERY KHUSUS MOBILE --- */
 @media (max-width: 600px) {
     .controls {
         bottom: 15px;
