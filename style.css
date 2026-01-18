@@ -11,59 +11,56 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 80vh;
+    margin: 10vh;
+    height: 100vh;
     width: 100vw;
     overflow: hidden;
-    background: #2c3e50; /* Background gelap */
+    background: #333; /* Warna gelap */
 }
 
-/* Loader Sederhana */
+/* Loader */
 #loader {
     position: absolute;
     color: white;
     font-size: 18px;
-    letter-spacing: 1px;
 }
 
 .flipbook {
     width: 960px;
     height: 680px;
     visibility: hidden;
-    
-    /* Hapus box-shadow pada container utama agar render lebih cepat */
     background: transparent;
 }
 
-/* OPTIMASI ANIMASI */
+/* --- SOLUSI KEDIP PUTIH (FLICKERING FIX) --- */
+
+/* 1. Hilangkan background putih dari container halaman */
 .flipbook .page,
 .flipbook .hard,
 .flipbook div {
-    /* Mencegah browser melakukan antialiasing berlebihan */
-    -webkit-backface-visibility: hidden;
-    backface-visibility: hidden;
+    background-color: transparent !important; /* JANGAN WHITE */
     
-    /* Memberi tahu browser elemen ini akan bergerak (Boost Performa) */
-    will-change: transform; 
-    
-    background-color: white; 
+    /* Paksa render 3D agar GPU yang bekerja, bukan CPU */
+    -webkit-transform-style: preserve-3d;
+    transform-style: preserve-3d;
 }
 
+/* 2. Pastikan gambar menutupi segalanya */
 .flipbook img {
     width: 100%;
     height: 100%;
-    
-    /* Gunakan Fill untuk memaksa ukuran pas */
     object-fit: fill; 
-    
     display: block;
     
-    /* Memastikan gambar tidak bisa diseleksi/didrag user */
+    /* Mencegah gambar berkedip saat animasi selesai */
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    
     user-select: none;
-    -webkit-user-drag: none;
     pointer-events: none;
 }
 
-/* Pastikan sampul hard cover transparan agar gambar terlihat */
+/* Hard cover juga harus transparan background-nya */
 .flipbook .hard {
     background: none !important;
     border: none !important;

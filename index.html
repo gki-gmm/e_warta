@@ -37,25 +37,22 @@
   <script>
     $(window).on('load', function() {
       
-      $("#loader").hide(); // Hilangkan teks loading
-      $(".flipbook").css("visibility", "visible"); // Munculkan buku
+      $("#loader").hide();
+      $(".flipbook").css("visibility", "visible");
 
       $(".flipbook").turn({
         width: 960,
         height: 680,
-        
-        // SETTING AGAR MULUS & BERSIH
         autoCenter: true,
-        acceleration: true, // Wajib TRUE
-        gradients: false,   // FALSE = Hilangkan bayangan lipatan (efek kotor hilang)
-        duration: 1000,     // Kecepatan standar (jangan terlalu lambat)
-        elevation: 0        // 0 = Hilangkan efek tumpukan kertas (lebih flat & clean)
+        acceleration: true, // Wajib ON
+        gradients: true,    // Boleh ON lagi karena background sudah transparan
+        duration: 1000,
+        elevation: 50
       });
 
-      // Navigasi Klik yang Responsif
+      // Event Listener Klik
       $(".flipbook").click(function(e) {
         var offset = $(this).offset();
-        // Klik di area 30% kiri atau kanan
         if (e.pageX - offset.left < $(this).width() * 0.3) {
            $(this).turn("previous");
         } else if (e.pageX - offset.left > $(this).width() * 0.7) {
@@ -63,7 +60,7 @@
         }
       });
       
-      // Navigasi Keyboard
+      // Event Listener Keyboard
       $(document).keydown(function(e){
         if (e.keyCode == 37) $('.flipbook').turn('previous');
         if (e.keyCode == 39) $('.flipbook').turn('next');
