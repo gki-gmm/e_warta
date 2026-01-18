@@ -190,7 +190,7 @@ body {
     left: 0;
     width: 100vw;
     height: 100vh;
-    background: #1a1a1a; /* Samakan dengan warna background body */
+    background: #ffffff; /* Samakan dengan warna background body */
     z-index: 9999; /* Paling atas */
     display: flex;
     flex-direction: column;
