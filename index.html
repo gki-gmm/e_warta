@@ -4,16 +4,15 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="style.css" />
-  <title>Warta Jemaat Digital</title>
+  <title>Warta Jemaat</title>
 </head>
 
 <body>
 
-  <div id="loader">Sedang memuat Warta Jemaat...</div>
+  <div id="loader">Memuat...</div>
 
   <div class="flipbook">
     <div><img src="images/cover1.webp" alt="" /></div>
-    
     <div class="hard"><img src="images/cover2.webp" alt="" /></div>
     
     <div><img src="images/page1.webp" alt="" /></div>
@@ -30,46 +29,33 @@
     <div><img src="images/page12.webp" alt="" /></div>
     
     <div class="hard"><img src="images/back2.webp" alt="" /></div>
-    
-    </div>
+  </div>
 
   <script src="jquery.js"></script>
   <script src="turn.js"></script>
   
   <script>
-    // Tunggu sampai SELURUH gambar & resource selesai dimuat
     $(window).on('load', function() {
       
-      // 1. Sembunyikan loader
-      $("#loader").fadeOut();
-      
-      // 2. Munculkan Flipbook
-      $(".flipbook").css("visibility", "visible").hide().fadeIn(1000);
+      $("#loader").hide(); // Hilangkan teks loading
+      $(".flipbook").css("visibility", "visible"); // Munculkan buku
 
-      // 3. Jalankan Turn.js
       $(".flipbook").turn({
-        width: 960,  // Lebar total (2 halaman)
-        height: 680, // Tinggi
+        width: 960,
+        height: 680,
         
+        // SETTING AGAR MULUS & BERSIH
         autoCenter: true,
-        acceleration: true, // Wajib TRUE agar tidak patah-patah
-        gradients: true,    // Efek bayangan kertas saat ditekuk
-        elevation: 50,      // Efek ketinggian tumpukan kertas
-        duration: 1200,     // Kecepatan animasi (ms)
-        
-        when: {
-          // Menambahkan logika agar suara kertas bisa ditambahkan nanti di sini
-          turning: function(event, page, view) {
-            console.log("Membuka halaman: " + page);
-          }
-        }
+        acceleration: true, // Wajib TRUE
+        gradients: false,   // FALSE = Hilangkan bayangan lipatan (efek kotor hilang)
+        duration: 1000,     // Kecepatan standar (jangan terlalu lambat)
+        elevation: 0        // 0 = Hilangkan efek tumpukan kertas (lebih flat & clean)
       });
 
-      // 4. Navigasi Klik (Kiri/Kanan)
+      // Navigasi Klik yang Responsif
       $(".flipbook").click(function(e) {
         var offset = $(this).offset();
-        // Area klik: Jika klik di 30% area kiri -> Mundur, sisanya -> Maju
-        // Ini lebih intuitif daripada strictly 50%
+        // Klik di area 30% kiri atau kanan
         if (e.pageX - offset.left < $(this).width() * 0.3) {
            $(this).turn("previous");
         } else if (e.pageX - offset.left > $(this).width() * 0.7) {
@@ -77,7 +63,7 @@
         }
       });
       
-      // 5. Navigasi Keyboard
+      // Navigasi Keyboard
       $(document).keydown(function(e){
         if (e.keyCode == 37) $('.flipbook').turn('previous');
         if (e.keyCode == 39) $('.flipbook').turn('next');
