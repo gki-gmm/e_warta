@@ -94,7 +94,7 @@ body {
     
     /* Atur posisi: */
     top: 50%;       /* Jarak dari atas (50% = tengah vertikal) */
-    left: 70%;      /* 75% artinya geser ke KANAN (karena cover 1 ada di kanan) */
+    left: 65%;      /* 75% artinya geser ke KANAN (karena cover 1 ada di kanan) */
     
     /* Titik tumpu (JANGAN DIUBAH kecuali paham) */
     transform: translate(-50%, -50%); 
