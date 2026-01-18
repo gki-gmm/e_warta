@@ -11,19 +11,18 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-top: 10vh;
-    margin-bottom: 10vh;
-    height: 90vh;
+    margin: 10vh;
+    height: 80vh;
     width: 100vw;
     overflow: hidden;
-    background: #333; /* Warna gelap */
+    background: #333; /* Background gelap */
 }
 
-/* Loader */
 #loader {
     position: absolute;
     color: white;
     font-size: 18px;
+    z-index: 1000;
 }
 
 .flipbook {
@@ -31,38 +30,38 @@ body {
     height: 680px;
     visibility: hidden;
     background: transparent;
+    
+    /* Memberi sedikit bayangan di bawah buku agar terlihat mengambang 3D */
+    box-shadow: 0 10px 20px rgba(0,0,0,0.3);
 }
 
-/* --- SOLUSI KEDIP PUTIH (FLICKERING FIX) --- */
-
-/* 1. Hilangkan background putih dari container halaman */
+/* SETTING HALAMAN AGAR TERLIHAT SEPERTI KERTAS */
 .flipbook .page,
 .flipbook .hard,
 .flipbook div {
-    background-color: transparent !important; /* JANGAN WHITE */
+    /* Kita kembalikan warna putih agar terlihat solid saat membalik */
+    background-color: #ffffff; 
     
-    /* Paksa render 3D agar GPU yang bekerja, bukan CPU */
+    /* PENTING: Agar render 3D tidak patah-patah */
+    transform-style: preserve-3d; 
     -webkit-transform-style: preserve-3d;
-    transform-style: preserve-3d;
 }
 
-/* 2. Pastikan gambar menutupi segalanya */
 .flipbook img {
     width: 100%;
     height: 100%;
     object-fit: fill; 
     display: block;
     
-    /* Mencegah gambar berkedip saat animasi selesai */
-    -webkit-backface-visibility: hidden;
+    /* Mencegah gambar berkedip/hilang saat animasi cepat */
     backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
     
     user-select: none;
     pointer-events: none;
 }
 
-/* Hard cover juga harus transparan background-nya */
+/* Hard cover transparan agar gambar cover2/back2 terlihat penuh */
 .flipbook .hard {
-    background: none !important;
-    border: none !important;
+    background: none !important; 
 }
