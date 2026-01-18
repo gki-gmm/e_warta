@@ -71,7 +71,7 @@ body {
 .shadow-item {
     position: absolute;
     opacity: 0;
-    transition: opacity 1s ease-in-out;
+    transition: opacity 0.1s ease-in-out;
     
     /* Agar gambar tidak gepeng */
     object-fit: contain; 
