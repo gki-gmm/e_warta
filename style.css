@@ -75,6 +75,15 @@ body {
     opacity: 0; /* Semua sembunyi dulu */
     transition: opacity 0.6s ease-in-out; /* Efek transisi halus */
 }
+.shadow-back {
+    width: 480px;
+    height: 680px;
+    
+    top: 50%;
+    left: 22%;      /* 25% artinya geser ke KIRI */
+    
+    transform: translate(-50%, -50%);
+}
 
 /* Class aktif untuk memunculkan shadow */
 .shadow-item.active {
