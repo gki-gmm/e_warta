@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
@@ -11,34 +12,40 @@
 <body>
 
   <div id="loader-overlay">
-      <div class="spinner"></div>
-      <div class="loading-text">Memuat Warta...</div>
+    <div class="spinner"></div>
+    <div class="loading-text">Memuat Warta...</div>
   </div>
 
   <div class="viewport">
-    
+
     <div class="book-container">
-        
-        <div class="flipbook">
-          <div class="hard"><img src="images/cover1.webp" alt="" /></div>
-          <div class="hard"><img src="images/coverin1.webp" alt="" /></div>
-          
-          <div><img src="images/page1.webp" alt="" /></div>
-          <div><img src="images/page2.webp" alt="" /></div>
-          <div><img src="images/page3.webp" alt="" /></div>
-          <div><img src="images/page4.webp" alt="" /></div>
-          <div><img src="images/page5.webp" alt="" /></div>
-          <div><img src="images/page6.webp" alt="" /></div>
-          <div><img src="images/page7.webp" alt="" /></div>
-          <div><img src="images/page8.webp" alt="" /></div>
-          <div><img src="images/page9.webp" alt="" /></div>
-          <div><img src="images/page10.webp" alt="" /></div>
-          <div><img src="images/page11.webp" alt="" /></div>
-          <div><img src="images/page12.webp" alt="" /></div>
-          
-          <div class="hard"><img src="images/coverin2.webp" alt="" /></div>
-          <div class="hard"><img src="images/cover2.webp" alt="" /></div>
-        </div>
+      <div class="flipbook">
+        <!-- Cover Depan -->
+        <div class="hard"><img src="images/cover1.webp" alt="" /></div>
+
+        <!-- Cover Dalam Depan (Akan dihapus di Mobile) -->
+        <div class="hard inside-cover"><img src="images/coverin1.webp" alt="" /></div>
+
+        <!-- Halaman Isi -->
+        <div><img src="images/page1.webp" alt="" /></div>
+        <div><img src="images/page2.webp" alt="" /></div>
+        <div><img src="images/page3.webp" alt="" /></div>
+        <div><img src="images/page4.webp" alt="" /></div>
+        <div><img src="images/page5.webp" alt="" /></div>
+        <div><img src="images/page6.webp" alt="" /></div>
+        <div><img src="images/page7.webp" alt="" /></div>
+        <div><img src="images/page8.webp" alt="" /></div>
+        <div><img src="images/page9.webp" alt="" /></div>
+        <div><img src="images/page10.webp" alt="" /></div>
+        <div><img src="images/page11.webp" alt="" /></div>
+        <div><img src="images/page12.webp" alt="" /></div>
+
+        <!-- Cover Dalam Belakang (Akan dihapus di Mobile) -->
+        <div class="hard inside-cover"><img src="images/coverin2.webp" alt="" /></div>
+
+        <!-- Cover Belakang -->
+        <div class="hard"><img src="images/cover2.webp" alt="" /></div>
+      </div>
     </div>
   </div>
 
@@ -51,10 +58,10 @@
 
   <script src="jquery.js"></script>
   <script src="turn.js"></script>
-  
+
   <script>
-    $(window).on('load', function() {
-      
+    $(window).on('load', function () {
+
       var flipbook = $(".flipbook");
       var loader = $("#loader-overlay");
 
@@ -71,36 +78,36 @@
         gradients: true,
         elevation: 50,
         duration: 1000,
-        
+
         // LOGIKA SWITCH SHADOW UTAMA
         when: {
-            turning: function(e, page, view) {
-                updateShadows(page);
-            }
+          turning: function (e, page, view) {
+            updateShadows(page);
+          }
         }
       });
 
       // Fungsi untuk mengatur shadow mana yang muncul
       function updateShadows(page) {
-          var totalPages = flipbook.turn("pages");
+        var totalPages = flipbook.turn("pages");
 
-          // Matikan semua shadow dulu (biar transisi halus)
-          $(".shadow-item").removeClass("active");
-          $(".flipbook").removeClass("show-spine");
+        // Matikan semua shadow dulu (biar transisi halus)
+        $(".shadow-item").removeClass("active");
+        $(".flipbook").removeClass("show-spine");
 
-          if (page == 1) {
-              // KONDISI 1: Cover Depan
-              shadowFront.addClass("active"); // Munculkan Front Shadow
-              
-          } else if (page == totalPages) {
-              // KONDISI 2: Cover Belakang
-              shadowBack.addClass("active"); // Munculkan Back Shadow
+        if (page == 1) {
+          // KONDISI 1: Cover Depan
+          shadowFront.addClass("active"); // Munculkan Front Shadow
 
-          } else {
-              // KONDISI 3: Buku Terbuka
-              shadowFlip.addClass("active"); // Munculkan Flip Shadow
-              $(".flipbook").addClass("show-spine"); // Munculkan garis tengah
-          }
+        } else if (page == totalPages) {
+          // KONDISI 2: Cover Belakang
+          shadowBack.addClass("active"); // Munculkan Back Shadow
+
+        } else {
+          // KONDISI 3: Buku Terbuka
+          shadowFlip.addClass("active"); // Munculkan Flip Shadow
+          $(".flipbook").addClass("show-spine"); // Munculkan garis tengah
+        }
       }
 
       function resizeViewport() {
@@ -108,62 +115,62 @@
         var height = $(window).height();
 
         if (width < 768) {
-            // MODE MOBILE
-            var mobileWidth = width * 0.95;
-            var mobileHeight = mobileWidth * 1.414;
-            if(mobileHeight > height * 0.9) {
-                mobileHeight = height * 0.9;
-                mobileWidth = mobileHeight / 1.414;
-            }
-            flipbook.turn("display", "single");
-            flipbook.turn("size", mobileWidth, mobileHeight);
-            $(".book-container").css("transform", "scale(1)");
-            
-            // Di HP Shadow dimatikan via CSS media query
-            
-        } else {
-            // MODE DESKTOP
-            var deskWidth = 960;
-            var deskHeight = 680;
-            if (width < 1100) {
-                var scale = width / 1200;
-                $(".book-container").css("transform", "scale("+scale+")");
-            } else {
-                 $(".book-container").css("transform", "scale(1)");
-            }
-            flipbook.turn("display", "double");
-            flipbook.turn("size", deskWidth, deskHeight);
+          // MODE MOBILE
+          var mobileWidth = width * 0.95;
+          var mobileHeight = mobileWidth * 1.414;
+          if (mobileHeight > height * 0.9) {
+            mobileHeight = height * 0.9;
+            mobileWidth = mobileHeight / 1.414;
+          }
+          flipbook.turn("display", "single");
+          flipbook.turn("size", mobileWidth, mobileHeight);
+          $(".book-container").css("transform", "scale(1)");
 
-            // Update ulang shadow sesuai halaman saat ini
-            updateShadows(flipbook.turn("page"));
+          // Di HP Shadow dimatikan via CSS media query
+
+        } else {
+          // MODE DESKTOP
+          var deskWidth = 960;
+          var deskHeight = 680;
+          if (width < 1100) {
+            var scale = width / 1200;
+            $(".book-container").css("transform", "scale(" + scale + ")");
+          } else {
+            $(".book-container").css("transform", "scale(1)");
+          }
+          flipbook.turn("display", "double");
+          flipbook.turn("size", deskWidth, deskHeight);
+
+          // Update ulang shadow sesuai halaman saat ini
+          updateShadows(flipbook.turn("page"));
         }
       }
 
       resizeViewport();
       $(window).resize(resizeViewport);
 
-      setTimeout(function(){
-          loader.fadeOut(500, function() {
-              flipbook.addClass("loaded"); 
-          });
+      setTimeout(function () {
+        loader.fadeOut(500, function () {
+          flipbook.addClass("loaded");
+        });
       }, 500);
 
-      $("#prevBtn").click(function() { flipbook.turn("previous"); });
-      $("#nextBtn").click(function() { flipbook.turn("next"); });
+      $("#prevBtn").click(function () { flipbook.turn("previous"); });
+      $("#nextBtn").click(function () { flipbook.turn("next"); });
 
       var currentZoom = 1;
-      $("#zoomIn").click(function() {
-          currentZoom += 0.1;
+      $("#zoomIn").click(function () {
+        currentZoom += 0.1;
+        $(".book-container").css("transform", "scale(" + currentZoom + ")");
+      });
+      $("#zoomOut").click(function () {
+        if (currentZoom > 0.5) {
+          currentZoom -= 0.1;
           $(".book-container").css("transform", "scale(" + currentZoom + ")");
+        }
       });
-      $("#zoomOut").click(function() {
-          if(currentZoom > 0.5) {
-            currentZoom -= 0.1;
-            $(".book-container").css("transform", "scale(" + currentZoom + ")");
-          }
-      });
-      
-      $(document).keydown(function(e){
+
+      $(document).keydown(function (e) {
         if (e.keyCode == 37) flipbook.turn('previous');
         if (e.keyCode == 39) flipbook.turn('next');
       });
@@ -171,4 +178,5 @@
     });
   </script>
 </body>
+
 </html>

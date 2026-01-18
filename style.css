@@ -115,11 +115,25 @@ body {
     .flipbook .page.p1::after { background: none; }
     .flipbook .page.last::after { background: none; } 
 }
-
 @media (max-width: 767px) {
-    .flipbook .page::after { background: none; }
-    /* Di Mobile, sembunyikan semua shadow custom agar tidak berat/aneh */
-    .book-container { width: auto; height: auto; }
+    /* Atur ukuran elemen .flipbook langsung di CSS */
+    .flipbook {
+        width: 100vw !important;       /* Lebar penuh layar HP */
+        height: 65vh !important;       /* Tinggi 65% layar */
+        top: 0 !important; 
+        left: 0 !important;
+        margin: 0 !important;          /* Hapus margin auto turn.js di mobile */
+    }
+    
+    /* Reset container agar flex align-items berfungsi lagi */
+    .book-container {
+        width: 100%;
+        height: auto;
+        display: flex;
+        justify-content: center;
+        align-items: flex-start; /* Mulai dari atas agar tidak kepotong */
+        padding-top: 20px;
+    }
 }
 
 /* --- CONTROLS --- */
