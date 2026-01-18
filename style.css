@@ -9,8 +9,8 @@
 }
 
 body {
-    background: #1a1a1a; /* Dark Elegant Background */
-    overflow: hidden;
+    background: #1a1a1a;
+    overflow: hidden; /* Mencegah scroll browser default */
     height: 100vh;
     width: 100vw;
     display: flex;
@@ -18,8 +18,7 @@ body {
     align-items: center;
 }
 
-/* --- WADAH UTAMA (VIEWPORT) --- */
-/* Ini trik agar buku bisa di-zoom in/out otomatis */
+/* --- VIEWPORT --- */
 .viewport {
     width: 100%;
     height: 100%;
@@ -30,63 +29,57 @@ body {
 }
 
 .flipbook {
-    width: 960px;
-    height: 680px;
-    /* Bayangan Realistis (Soft Shadow) */
-    box-shadow: 0 30px 60px rgba(0,0,0,0.5); 
-    transition: transform 0.3s ease; /* Smooth zoom handling */
+    /* Ukuran Default Desktop akan di-handle oleh JS */
+    transition: margin-left 0.2s ease-in-out;
+    background-color: transparent;
 }
 
 .flipbook .page {
     background-color: white;
-    /* Optimasi 3D Hardware */
     transform-style: preserve-3d;
-    -webkit-transform-style: preserve-3d;
 }
 
 .flipbook img {
     width: 100%;
     height: 100%;
+    /* Gunakan Fill agar pas di kotak yang disediakan */
     object-fit: fill; 
     display: block;
     user-select: none;
     pointer-events: none;
-    /* Hapus kedip putih */
     -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
 }
 
-/* Hard Cover Transparan */
 .flipbook .hard {
     background: none !important;
 }
 
-/* --- CONTROLS BAR (MODERN) --- */
+/* --- CONTROLS BAR --- */
 .controls {
     position: fixed;
-    bottom: 30px;
+    bottom: 20px;
     left: 50%;
     transform: translateX(-50%);
-    background: rgba(255, 255, 255, 0.1); /* Transparan */
-    backdrop-filter: blur(10px); /* Efek Kaca (Glassmorphism) */
-    padding: 10px 25px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    padding: 8px 20px;
     border-radius: 50px;
     display: flex;
-    gap: 20px;
+    gap: 15px;
     border: 1px solid rgba(255, 255, 255, 0.2);
     z-index: 999;
-    box-shadow: 0 10px 20px rgba(0,0,0,0.3);
 }
 
 .btn {
     background: none;
     border: none;
     color: white;
-    font-size: 18px;
+    font-size: 16px;
     cursor: pointer;
     transition: 0.2s;
-    width: 40px;
-    height: 40px;
+    width: 35px;
+    height: 35px;
     border-radius: 50%;
     display: flex;
     justify-content: center;
@@ -96,10 +89,6 @@ body {
 .btn:hover {
     background: rgba(255, 255, 255, 0.2);
     transform: scale(1.1);
-}
-
-.btn:active {
-    transform: scale(0.9);
 }
 
 /* Loader */
@@ -112,11 +101,15 @@ body {
     font-size: 14px;
     letter-spacing: 2px;
     text-transform: uppercase;
-    animation: pulse 1.5s infinite;
 }
 
-@keyframes pulse {
-    0% { opacity: 0.5; }
-    50% { opacity: 1; }
-    100% { opacity: 0.5; }
-}   
+/* --- MEDIA QUERY KHUSUS MOBILE --- */
+@media (max-width: 600px) {
+    .controls {
+        bottom: 15px;
+        padding: 5px 15px;
+        gap: 10px;
+        width: 90%;
+        justify-content: space-around;
+    }
+}
