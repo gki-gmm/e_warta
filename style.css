@@ -104,7 +104,7 @@ body {
 /* Ini harusnya pas di tengah-tengah */
 .shadow-flip {
     /* Lebar shadow terbuka harus lebih lebar dari bukunya (960px) */
-    width: 1100px;  
+    width: 960px;  
     height: 680px;
     
     top: 50%;
