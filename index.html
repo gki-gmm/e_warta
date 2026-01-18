@@ -65,7 +65,11 @@
       var flipbook = $(".flipbook");
       var loader = $("#loader-overlay");
 
-      
+      // Selector untuk 3 Shadow
+      var shadowFront = $(".shadow-front");
+      var shadowFlip = $(".shadow-flip");
+      var shadowBack = $(".shadow-back");
+
       flipbook.turn({
         width: 960,
         height: 680,
@@ -82,6 +86,29 @@
           }
         }
       });
+
+      // Fungsi untuk mengatur shadow mana yang muncul
+      function updateShadows(page) {
+        var totalPages = flipbook.turn("pages");
+
+        // Matikan semua shadow dulu (biar transisi halus)
+        $(".shadow-item").removeClass("active");
+        $(".flipbook").removeClass("show-spine");
+
+        if (page == 1) {
+          // KONDISI 1: Cover Depan
+          shadowFront.addClass("active"); // Munculkan Front Shadow
+
+        } else if (page == totalPages) {
+          // KONDISI 2: Cover Belakang
+          shadowBack.addClass("active"); // Munculkan Back Shadow
+
+        } else {
+          // KONDISI 3: Buku Terbuka
+          shadowFlip.addClass("active"); // Munculkan Flip Shadow
+          $(".flipbook").addClass("show-spine"); // Munculkan garis tengah
+        }
+      }
 
       function resizeViewport() {
         var width = $(window).width();
@@ -149,47 +176,7 @@
       });
 
     });
-     $(document).ready(function() {
     
-    // --- LOGIC HAPUS COVER DALAM UNTUK MOBILE ---
-    var screenWidth = $(window).width();
-
-    // Jika lebar layar <= 767px (Mobile)
-    if (screenWidth <= 767) {
-        // Hapus elemen yang memiliki kelas 'inside-cover'
-        $('.flipbook .inside-cover').remove();
-        
-        // Optional: Tambahkan logika lain khusus mobile jika perlu
-        console.log("Mobile mode: Inside covers removed.");
-    }
-    // ----------------------------------------------
-
-    // --- INISIALISASI TURN.JS (PENTING: Letakkan setelah logika hapus) ---
-    $(".flipbook").turn({
-        width: 960,       // Lebar buku (Desktop)
-        height: 680,      // Tinggi buku (Desktop)
-        elevation: 50,
-        gradients: true,
-        autoCenter: true,
-        duration: 1000,
-        
-        // Responsif: Jika di mobile, ubah ukuran bukunya
-        when: {
-            turning: function(e, page, view) {
-                // Logika saat membalik halaman...
-            }
-        }
-    });
-
-    // Responsif CSS untuk Turn.js saat resize window
-    $(window).bind('keydown', function(e){
-        if (e.keyCode==37)
-            $(".flipbook").turn("previous");
-        else if (e.keyCode==39)
-            $(".flipbook").turn("next");
-    });
-
-});
   </script>
 </body>
 
