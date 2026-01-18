@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
 
 * {
     margin: 0;
@@ -14,52 +14,75 @@ body {
     height: 100vh;
     width: 100vw;
     overflow: hidden;
-    background: #333; /* Background gelap agar buku lebih kontras */
+    /* Background abu-abu elegan agar buku menonjol */
+    background: #2c3e50; 
 }
 
+/* --- LOADER (Indikator Loading) --- */
+#loader {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-size: 20px;
+    text-align: center;
+}
+
+/* --- FLIPBOOK CONTAINER --- */
 .flipbook {
-    /* Rasio A4 (Total 2 halaman berdampingan) */
-    width: 990px;  
-    height: 700px;
+    /* Rasio A4 Landscape (Spread 2 Halaman) */
+    /* A4 = 210mm x 297mm. Rasio 1 : 1.414 */
+    /* Tinggi 680px, maka Lebar per halaman = 480px. Total Lebar = 960px */
+    width: 960px;  
+    height: 680px;
     
-    /* Sembunyikan dulu sampai semua gambar diload JS */
-    visibility: hidden; 
+    visibility: hidden; /* Sembunyi sampai siap */
+    
+    /* Efek Bayangan 3D di belakang buku */
+    box-shadow: 0 20px 50px rgba(0,0,0,0.5); 
     
     background: transparent;
-    -webkit-transition: margin-left 0.2s ease-in-out;
-    -moz-transition: margin-left 0.2s ease-in-out;
-    -o-transition: margin-left 0.2s ease-in-out;
-    -ms-transition: margin-left 0.2s ease-in-out;
-    transition: margin-left 0.2s ease-in-out;
+    
+    /* Transisi posisi agar autoCenter halus */
+    transition: margin-left 0.2s ease-in-out; 
 }
 
+/* --- HALAMAN & GAMBAR --- */
 .flipbook .page,
 .flipbook .hard,
 .flipbook div {
-    width: 100%;
-    height: 100%;
-    background-color: white;
-    overflow: hidden;
+    background-color: white; /* Warna kertas dasar */
 }
 
 .flipbook img {
     width: 100%;
     height: 100%;
     
-    /* Gunakan Fill agar memaksa gambar mengikuti rasio A4 */
+    /* Mengunci gambar agar tidak gepeng tapi tetap penuh */
     object-fit: fill; 
     
     display: block;
     
-    /* OPTIMASI PERFORMA AGAR TIDAK KEDIP PUTIH */
-    -webkit-user-select: none; /* Mencegah blok biru saat drag */
-    -moz-user-select: none;
-    -ms-user-select: none;
+    /* HACKS UNTUK PERFORMA LICIN */
+    -webkit-transform: translate3d(0, 0, 0); /* Paksa GPU */
+    transform: translate3d(0, 0, 0);
+    -webkit-backface-visibility: hidden; /* Mencegah kedip putih */
+    backface-visibility: hidden;
+    
+    /* Mencegah user select gambar */
     user-select: none;
     -webkit-user-drag: none;
-    pointer-events: none; /* Mencegah gambar di-drag ghosting */
+    pointer-events: none; 
 }
 
+/* Hapus style default hard cover agar gambar terlihat penuh */
 .flipbook .hard {
     background: none !important;
+    border: none !important;
+}
+
+/* Bayangan lipatan tengah (opsional, turn.js menanganinya tapi ini backup) */
+.flipbook .shadow {
+    box-shadow: inset 20px 0 50px rgba(0,0,0,0.1) !important;
 }
