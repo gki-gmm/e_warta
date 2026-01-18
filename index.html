@@ -16,47 +16,52 @@
   </div>
 
   <div class="viewport">
-    <div class="flipbook">
-      <div class="hard"><img src="images/cover1.webp" alt="" /></div>
-      <div class="hard"><img src="images/cover2.webp" alt="" /></div>
-      
-      <div><img src="images/page1.webp" alt="" /></div>
-      <div><img src="images/page2.webp" alt="" /></div>
-      <div><img src="images/page3.webp" alt="" /></div>
-      <div><img src="images/page4.webp" alt="" /></div>
-      <div><img src="images/page5.webp" alt="" /></div>
-      <div><img src="images/page6.webp" alt="" /></div>
-      <div><img src="images/page7.webp" alt="" /></div>
-      <div><img src="images/page8.webp" alt="" /></div>
-      <div><img src="images/page9.webp" alt="" /></div>
-      <div><img src="images/page10.webp" alt="" /></div>
-      <div><img src="images/page11.webp" alt="" /></div>
-      <div><img src="images/page12.webp" alt="" /></div>
-      
-      <div class="hard"><img src="images/back2.webp" alt="" /></div>
-      <div class="hard"><img src="images/cover2.webp" alt="" /></div>
+    
+    <div class="book-container">
+        
+        <img src="images/shadow.png" class="custom-shadow" alt="Book Shadow">
+
+        <div class="flipbook">
+          <div class="hard"><img src="images/cover1.webp" alt="" /></div>
+          <div class="hard"><img src="images/cover2.webp" alt="" /></div>
+          
+          <div><img src="images/page1.webp" alt="" /></div>
+          <div><img src="images/page2.webp" alt="" /></div>
+          <div><img src="images/page3.webp" alt="" /></div>
+          <div><img src="images/page4.webp" alt="" /></div>
+          <div><img src="images/page5.webp" alt="" /></div>
+          <div><img src="images/page6.webp" alt="" /></div>
+          <div><img src="images/page7.webp" alt="" /></div>
+          <div><img src="images/page8.webp" alt="" /></div>
+          <div><img src="images/page9.webp" alt="" /></div>
+          <div><img src="images/page10.webp" alt="" /></div>
+          <div><img src="images/page11.webp" alt="" /></div>
+          <div><img src="images/page12.webp" alt="" /></div>
+          
+          <div class="hard"><img src="images/back2.webp" alt="" /></div>
+          <div class="hard"><img src="images/cover2.webp" alt="" /></div>
+        </div>
     </div>
   </div>
 
   <div class="controls">
-    <button class="btn" id="prevBtn"><i class="fa-solid fa-chevron-left"></i></button>
-    <button class="btn" id="zoomOut"><i class="fa-solid fa-minus"></i></button>
-    <button class="btn" id="zoomIn"><i class="fa-solid fa-plus"></i></button>
-    <button class="btn" id="nextBtn"><i class="fa-solid fa-chevron-right"></i></button>
+    <button class="btn" id="prevBtn" title="Halaman Sebelumnya"><i class="fa-solid fa-chevron-left"></i></button>
+    <button class="btn" id="zoomOut" title="Perkecil"><i class="fa-solid fa-minus"></i></button>
+    <button class="btn" id="zoomIn" title="Perbesar"><i class="fa-solid fa-plus"></i></button>
+    <button class="btn" id="nextBtn" title="Halaman Selanjutnya"><i class="fa-solid fa-chevron-right"></i></button>
   </div>
 
   <script src="jquery.js"></script>
   <script src="turn.js"></script>
   
   <script>
-    // PENTING: Gunakan window load (bukan document ready) 
-    // agar menunggu SEMUA gambar selesai didownload baru script jalan
     $(window).on('load', function() {
       
       var flipbook = $(".flipbook");
       var loader = $("#loader-overlay");
+      var bookShadow = $(".custom-shadow"); 
 
-      // 1. Inisialisasi Turn.js (Dalam keadaan tersembunyi)
+      // 1. Inisialisasi Turn.js
       flipbook.turn({
         width: 960,
         height: 680,
@@ -64,73 +69,112 @@
         acceleration: true,
         gradients: true,
         elevation: 50,
-        duration: 1000
+        duration: 1000,
+        // LOGIKA DETEKSI HALAMAN UNTUK SHADOW
+        when: {
+            turning: function(e, page, view) {
+                var totalPages = flipbook.turn("pages");
+
+                // Jika Cover Depan (1) ATAU Cover Belakang (terakhir)
+                if (page == 1 || page == totalPages) {
+                    // Hilangkan garis tengah
+                    $(".flipbook").removeClass("show-spine");
+                    // Hilangkan bayangan belakang
+                    bookShadow.removeClass("show");
+                } else {
+                    // Jika halaman tengah (buku terbuka)
+                    $(".flipbook").addClass("show-spine");
+                    bookShadow.addClass("show");
+                }
+            }
+        }
       });
 
-      // 2. Fungsi Resize (Smart Responsive)
+      // 2. Fungsi Responsif (Mobile vs Desktop)
       function resizeViewport() {
         var width = $(window).width();
         var height = $(window).height();
 
         if (width < 768) {
-            // MODE MOBILE
+            // MODE MOBILE (1 Halaman)
             var mobileWidth = width * 0.95;
-            var mobileHeight = mobileWidth * 1.414;
+            var mobileHeight = mobileWidth * 1.414; // Rasio A4
+            
+            // Batasi tinggi agar tidak melebihi layar
             if(mobileHeight > height * 0.9) {
                 mobileHeight = height * 0.9;
                 mobileWidth = mobileHeight / 1.414;
             }
+
             flipbook.turn("display", "single");
             flipbook.turn("size", mobileWidth, mobileHeight);
-            $(".flipbook").css("transform", "scale(1)");
+            
+            // Reset skala container
+            $(".book-container").css("transform", "scale(1)");
+            
+            // Pastikan shadow & spine hilang di HP
+            $(".flipbook").removeClass("show-spine");
+            bookShadow.removeClass("show");
+            
         } else {
-            // MODE DESKTOP
+            // MODE DESKTOP (2 Halaman)
             var deskWidth = 960;
             var deskHeight = 680;
-            if (width < 1000) {
-                var scale = width / 1100;
-                $(".flipbook").css("transform", "scale("+scale+")");
+            
+            // Zoom out otomatis jika layar desktop kecil
+            if (width < 1100) {
+                var scale = width / 1200;
+                $(".book-container").css("transform", "scale("+scale+")");
             } else {
-                 $(".flipbook").css("transform", "scale(1)");
+                 $(".book-container").css("transform", "scale(1)");
             }
+
             flipbook.turn("display", "double");
             flipbook.turn("size", deskWidth, deskHeight);
+
+            // Cek ulang status halaman saat resize
+            var currentPage = flipbook.turn("page");
+            var totalPages = flipbook.turn("pages");
+            
+            if (currentPage > 1 && currentPage < totalPages) {
+                 $(".flipbook").addClass("show-spine");
+                 bookShadow.addClass("show");
+            } else {
+                 $(".flipbook").removeClass("show-spine");
+                 bookShadow.removeClass("show");
+            }
         }
       }
 
-      // Jalankan resize dulu agar ukuran pas
+      // Jalankan resize saat awal
       resizeViewport();
+      // Jalankan resize saat layar diubah
       $(window).resize(resizeViewport);
 
-      // 3. TRANSISI LOADING YANG CANTIK
-      // Beri sedikit delay agar user yakin layout sudah stabil
+      // 3. Hilangkan Loader setelah siap
       setTimeout(function(){
-          
-          // Hilangkan loading screen
           loader.fadeOut(500, function() {
-              // Setelah loading hilang, baru munculkan buku pelan-pelan
               flipbook.addClass("loaded"); 
           });
+      }, 500);
 
-      }, 500); // Delay 0.5 detik (opsional)
-
-      
-      // Controls Logic
+      // 4. Logika Tombol Kontrol
       $("#prevBtn").click(function() { flipbook.turn("previous"); });
       $("#nextBtn").click(function() { flipbook.turn("next"); });
 
       var currentZoom = 1;
       $("#zoomIn").click(function() {
           currentZoom += 0.1;
-          $(".flipbook").css("transform", "scale(" + currentZoom + ")");
+          $(".book-container").css("transform", "scale(" + currentZoom + ")");
       });
       $("#zoomOut").click(function() {
           if(currentZoom > 0.5) {
             currentZoom -= 0.1;
-            $(".flipbook").css("transform", "scale(" + currentZoom + ")");
+            $(".book-container").css("transform", "scale(" + currentZoom + ")");
           }
       });
       
+      // Keyboard Navigation
       $(document).keydown(function(e){
         if (e.keyCode == 37) flipbook.turn('previous');
         if (e.keyCode == 39) flipbook.turn('next');
