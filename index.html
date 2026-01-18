@@ -388,7 +388,7 @@
         
         <div class="page-counter">
             <i class="fas fa-book"></i>
-            <span id="currentPage">1</span> / <span id="totalPages">10</span>
+            <span id="currentPage">1</span> / <span id="totalPages">12</span>
         </div>
         
         <button class="audio-control" id="audioToggle">
@@ -414,7 +414,7 @@
         const config = {
             imagePrefix: "page",        // Prefiks nama file gambar
             imageExtension: "webp",     // Ekstensi file gambar
-            totalPages: 10,             // Jumlah halaman isi (bukan termasuk cover)
+            totalPages: 12,             // Jumlah halaman isi (bukan termasuk cover)
             startPage: 0,               // Halaman saat ini (0 = cover depan tertutup)
             audioEnabled: true          // Efek audio aktif
         };
@@ -499,7 +499,7 @@
                 // Atur transformasi awal
                 const pageAngle = (i - 1) * 0.5; // Sedikit miring untuk efek realistis
                 page.style.transform = `rotateY(${pageAngle}deg)`;
-                page.style.zIndex = totalPages - i + 10;
+                page.style.zIndex = totalPages - i + 12;
             }
             
             // Atur cover belakang
@@ -538,7 +538,7 @@
                     page.style.zIndex = totalPages - pageNum + 5;
                 } else {
                     // Halaman yang belum dibalik
-                    page.style.zIndex = totalPages - pageNum + 10;
+                    page.style.zIndex = totalPages - pageNum + 12;
                 }
             });
         }
@@ -562,7 +562,7 @@
             
             // Buka cover depan
             frontCover.style.transform = 'rotateY(-180deg)';
-            frontCover.style.zIndex = 10;
+            frontCover.style.zIndex = 12;
             
             // Setelah animasi cover selesai, tampilkan halaman pertama
             setTimeout(() => {
