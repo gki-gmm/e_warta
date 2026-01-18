@@ -9,7 +9,7 @@
 
 <body>
 
-  <div id="loader">Memuat...</div>
+  <div id="loader">Memuat Warta Jemaat...</div>
 
   <div class="flipbook">
     <div><img src="images/cover1.webp" alt="" /></div>
@@ -37,20 +37,23 @@
   <script>
     $(window).on('load', function() {
       
-      $("#loader").hide();
+      $("#loader").fadeOut(); // Efek hilang pelan
       $(".flipbook").css("visibility", "visible");
 
       $(".flipbook").turn({
         width: 960,
         height: 680,
+        
         autoCenter: true,
-        acceleration: true, // Wajib ON
-        gradients: true,    // Boleh ON lagi karena background sudah transparan
-        duration: 1000,
-        elevation: 50
+        
+        // --- KUNCI EFEK KERTAS ---
+        acceleration: true, // Wajib ON agar halus
+        gradients: true,    // Wajib ON agar terlihat lengkungan & bayangan kertas
+        elevation: 50,      // Memberi efek tebal tumpukan kertas
+        duration: 1200      // Durasi sedikit lambat agar lengkungan terlihat jelas
       });
 
-      // Event Listener Klik
+      // Klik Navigasi
       $(".flipbook").click(function(e) {
         var offset = $(this).offset();
         if (e.pageX - offset.left < $(this).width() * 0.3) {
@@ -60,7 +63,7 @@
         }
       });
       
-      // Event Listener Keyboard
+      // Keyboard Navigasi
       $(document).keydown(function(e){
         if (e.keyCode == 37) $('.flipbook').turn('previous');
         if (e.keyCode == 39) $('.flipbook').turn('next');
