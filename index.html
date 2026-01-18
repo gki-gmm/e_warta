@@ -14,8 +14,6 @@
 
   <div class="viewport">
     
-    <div class="center-shadow"></div>
-
     <div class="flipbook">
       <div class="hard"><img src="images/cover1.webp" alt="" /></div>
       <div class="hard"><img src="images/cover2.webp" alt="" /></div>
@@ -52,7 +50,7 @@
     $(window).on('load', function() {
       $("#loader").fadeOut();
       var flipbook = $(".flipbook");
-      var shadow = $(".center-shadow"); // Ambil elemen shadow
+      // NOTE: Variabel 'shadow' sudah dihapus
 
       // Inisialisasi
       flipbook.turn({
@@ -65,7 +63,7 @@
         duration: 1000
       });
 
-      // FUNGSI CERDAS: Resize & Switch Mode & Shadow Control
+      // FUNGSI CERDAS: Resize & Switch Mode
       function resizeViewport() {
         var width = $(window).width();
         var height = $(window).height();
@@ -83,8 +81,7 @@
             flipbook.turn("size", mobileWidth, mobileHeight);
             $(".flipbook").css("transform", "scale(1)");
             
-            // HILANGKAN SHADOW DI MOBILE
-            shadow.css("opacity", 0);
+            // (NOTE: Kode shadow opacity dihapus karena sudah dihandle CSS media query)
             
         } else {
             // --- MODE DESKTOP (2 Halaman) ---
@@ -94,18 +91,16 @@
             if (width < 1000) {
                 var scale = width / 1100;
                 $(".flipbook").css("transform", "scale("+scale+")");
-                // Sesuaikan juga skala shadow agar pas
-                shadow.css("transform", "translate(-50%, -50%) scale("+scale+")");
+                // (NOTE: Kode transform shadow dihapus)
             } else {
                  $(".flipbook").css("transform", "scale(1)");
-                 shadow.css("transform", "translate(-50%, -50%) scale(1)");
+                 // (NOTE: Kode transform shadow dihapus)
             }
 
             flipbook.turn("display", "double");
             flipbook.turn("size", deskWidth, deskHeight);
             
-            // MUNCULKAN SHADOW DI DESKTOP
-            shadow.css("opacity", 1);
+            // (NOTE: Kode shadow opacity dihapus)
         }
       }
 
@@ -117,13 +112,9 @@
       $("#nextBtn").click(function() { flipbook.turn("next"); });
 
       var currentZoom = 1;
-      // Saat zoom manual, shadow juga harus ikut di-zoom
       function updateManualZoom() {
          $(".flipbook").css("transform", "scale(" + currentZoom + ")");
-         // Hanya zoom shadow jika di mode desktop (opacity 1)
-         if (shadow.css("opacity") == 1) {
-            shadow.css("transform", "translate(-50%, -50%) scale(" + currentZoom + ")");
-         }
+         // (NOTE: Update zoom shadow dihapus)
       }
 
       $("#zoomIn").click(function() {

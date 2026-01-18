@@ -18,6 +18,7 @@ body {
     align-items: center;
 }
 
+/* --- VIEWPORT --- */
 .viewport {
     width: 100%;
     height: 100%;
@@ -25,46 +26,24 @@ body {
     justify-content: center;
     align-items: center;
     overflow: hidden;
-    position: relative; /* Penting untuk posisi shadow */
+    position: relative;
 }
 
-/* --- BARU: BAYANGAN GARIS TENGAH BUKU --- */
-.center-shadow {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    /* Lebar bayangan, sesuaikan jika ingin lebih lebar/sempit */
-    width: 100px; 
-    /* Tinggi mengikuti tinggi buku (sedikit lebih kecil agar rapi) */
-    height: 670px; 
-    transform: translate(-50%, -50%); /* Posisi tepat di tengah */
-    
-    /* Gradasi Halus: Transparan -> Hitam Pudar di tengah -> Transparan */
-    background: linear-gradient(90deg, 
-        transparent 0%, 
-        rgba(0,0,0,0.05) 35%,
-        rgba(0,0,0,0.25) 50%, /* Titik tergelap di tengah */
-        rgba(0,0,0,0.05) 65%,
-        transparent 100%
-    );
-    
-    z-index: 20; /* Di atas halaman buku */
-    pointer-events: none; /* PENTING: Agar klik tembus ke buku di bawahnya */
-    
-    /* Default hidden, nanti dimunculkan JS jika mode desktop */
-    opacity: 0;
-    transition: opacity 0.5s ease;
-}
+/* (NOTE: .center-shadow YANG LAMA SUDAH DIHAPUS DARI SINI) */
 
 /* --- FLIPBOOK --- */
 .flipbook {
     transition: margin-left 0.2s ease-in-out;
     background-color: transparent;
+    /* Bayangan luar buku agar terlihat mengambang */
+    box-shadow: 0 20px 40px rgba(0,0,0,0.6); 
 }
 
 .flipbook .page {
     background-color: white;
     transform-style: preserve-3d;
+    /* Penting agar inset shadow terlihat di atas gambar */
+    z-index: 1; 
 }
 
 .flipbook img {
@@ -76,6 +55,9 @@ body {
     pointer-events: none;
     -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
+    /* Gambar ditaruh di belakang bayangan inset */
+    position: relative;
+    z-index: -1; 
 }
 
 .flipbook .hard {
@@ -118,6 +100,7 @@ body {
     transform: scale(1.1);
 }
 
+/* Loader */
 #loader {
     position: absolute;
     top: 50%;
@@ -129,12 +112,43 @@ body {
     text-transform: uppercase;
 }
 
-@media (max-width: 600px) {
+/* --- MEDIA QUERY MOBILE --- */
+@media (max-width: 767px) {
     .controls {
         bottom: 15px;
         padding: 5px 15px;
         gap: 10px;
         width: 90%;
         justify-content: space-around;
+    }
+    /* Di Mobile (1 halaman), hilangkan semua efek bayangan lipatan */
+    .flipbook .page {
+        box-shadow: none !important;
+    }
+    .flipbook {
+        box-shadow: none !important; /* Hilangkan bayangan luar di mobile agar bersih */
+    }
+}
+
+/* --- BARU: REALISTIC GUTTER SHADOW (HANYA DESKTOP) --- */
+@media (min-width: 768px) {
+    /* Halaman GENAP (Kiri) -> Bayangan INSET di sisi KANAN */
+    /* inset x-offset y-offset blur spread color */
+    .flipbook .even {
+        box-shadow: inset -30px 0px 40px -15px rgba(0,0,0,0.5) !important;
+    }
+
+    /* Halaman GANJIL (Kanan) -> Bayangan INSET di sisi KIRI */
+    .flipbook .odd {
+        box-shadow: inset 30px 0px 40px -15px rgba(0,0,0,0.5) !important;
+    }
+
+    /* KECUALIAN: Cover Depan Luar (P1) tidak butuh bayangan di kiri */
+    .flipbook .page.p1 {
+         box-shadow: none !important;
+    }
+    /* KECUALIAN: Cover Belakang Luar (jika ada) */
+    .flipbook .page.p14 { /* Sesuaikan p14 dengan nomor halaman terakhir Anda */
+         box-shadow: none !important;
     }
 }
