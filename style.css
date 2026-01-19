@@ -15,8 +15,8 @@ body {
     width: 100vw;
     display: flex;
     justify-content: center;
-    align-items: center;
-}
+    align-items: flex-start; /* Agar nempel di ATAS, bukan di tengah vertikal */
+    padding-top: 40px;       /* Beri jarak sedikit dari atap agar tidak terlalu mepet */
 
 /* --- LOADER --- */
 #loader-overlay {
