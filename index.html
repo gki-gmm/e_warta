@@ -60,124 +60,112 @@
   <script src="turn.js"></script>
 
   <script>
-    $(window).on('load', function () {
+    $(window).on('load', function() {
+        var flipbook = $(".flipbook");
+        var loader = $("#loader-overlay");
 
-      var flipbook = $(".flipbook");
-      var loader = $("#loader-overlay");
-
-      // Selector untuk 3 Shadow
-      var shadowFront = $(".shadow-front");
-      var shadowFlip = $(".shadow-flip");
-      var shadowBack = $(".shadow-back");
-
-      flipbook.turn({
-        width: 960,
-        height: 680,
-        autoCenter: true,
-        acceleration: true,
-        gradients: true,
-        elevation: 50,
-        duration: 1000,
-
-        // LOGIKA SWITCH SHADOW UTAMA
-        when: {
-          turning: function (e, page, view) {
-            updateShadows(page);
-          }
-        }
-      });
-
-      // Fungsi untuk mengatur shadow mana yang muncul
-      function updateShadows(page) {
-        var totalPages = flipbook.turn("pages");
-
-        // Matikan semua shadow dulu (biar transisi halus)
-        $(".shadow-item").removeClass("active");
-        $(".flipbook").removeClass("show-spine");
-
-        if (page == 1) {
-          // KONDISI 1: Cover Depan
-          shadowFront.addClass("active"); // Munculkan Front Shadow
-
-        } else if (page == totalPages) {
-          // KONDISI 2: Cover Belakang
-          shadowBack.addClass("active"); // Munculkan Back Shadow
-
-        } else {
-          // KONDISI 3: Buku Terbuka
-          shadowFlip.addClass("active"); // Munculkan Flip Shadow
-          $(".flipbook").addClass("show-spine"); // Munculkan garis tengah
-        }
-      }
-
-      function resizeViewport() {
-        var width = $(window).width();
-        var height = $(window).height();
-
-        if (width < 768) {
-          // MODE MOBILE
-          var mobileWidth = width * 0.95;
-          var mobileHeight = mobileWidth * 1.414;
-          if (mobileHeight > height * 0.9) {
-            mobileHeight = height * 0.9;
-            mobileWidth = mobileHeight / 1.414;
-          }
-          flipbook.turn("display", "single");
-          flipbook.turn("size", mobileWidth, mobileHeight);
-          $(".book-container").css("transform", "scale(1)");
-
-          // Di HP Shadow dimatikan via CSS media query
-
-        } else {
-          // MODE DESKTOP
-          var deskWidth = 960;
-          var deskHeight = 680;
-          if (width < 1100) {
-            var scale = width / 1200;
-            $(".book-container").css("transform", "scale(" + scale + ")");
-          } else {
-            $(".book-container").css("transform", "scale(1)");
-          }
-          flipbook.turn("display", "double");
-          flipbook.turn("size", deskWidth, deskHeight);
-
-          // Update ulang shadow sesuai halaman saat ini
-          updateShadows(flipbook.turn("page"));
-        }
-      }
-
-      resizeViewport();
-      $(window).resize(resizeViewport);
-
-      setTimeout(function () {
-        loader.fadeOut(500, function () {
-          flipbook.addClass("loaded");
+        // 1. Inisialisasi Turn.js dengan ukuran default Desktop
+        flipbook.turn({
+            width: 960,
+            height: 680,
+            autoCenter: true,
+            acceleration: true,
+            gradients: true,
+            elevation: 50,
+            duration: 1000,
+            when: {
+                turning: function(e, page, view) {
+                    // Bunyi kertas (opsional)
+                }
+            }
         });
-      }, 500);
 
-      $("#prevBtn").click(function () { flipbook.turn("previous"); });
-      $("#nextBtn").click(function () { flipbook.turn("next"); });
+        // 2. Fungsi Penyesuai Ukuran Layar (RESPONSIVE MASTER)
+        function resizeViewport() {
+            var width = $(window).width();
+            var height = $(window).height();
+            var container = $(".book-container");
 
-      var currentZoom = 1;
-      $("#zoomIn").click(function () {
-        currentZoom += 0.1;
-        $(".book-container").css("transform", "scale(" + currentZoom + ")");
-      });
-      $("#zoomOut").click(function () {
-        if (currentZoom > 0.5) {
-          currentZoom -= 0.1;
-          $(".book-container").css("transform", "scale(" + currentZoom + ")");
+            // Ukuran Asli Buku (Base Size)
+            var baseWidth = 960;
+            var baseHeight = 680;
+
+            if (width < 768) {
+                // === LOGIKA HP (MOBILE) ===
+                // Ubah ke mode satu halaman (Single Page)
+                flipbook.turn("display", "single");
+
+                // Hitung ukuran pas layar HP
+                var mobileWidth = width - 20; // Kasih jarak kiri kanan dikit
+                var mobileHeight = mobileWidth * 1.414; // Rasio A4
+
+                // Set ukuran buku secara fisik
+                flipbook.turn("size", mobileWidth, mobileHeight);
+                
+                // Reset Scale CSS agar tidak bentrok
+                container.css({
+                    "transform": "none",
+                    "width": mobileWidth + "px",
+                    "height": mobileHeight + "px",
+                    "margin-top": "0" 
+                });
+
+            } else {
+                // === LOGIKA DESKTOP (PC / TABLET) ===
+                // Pastikan mode dua halaman (Double Page)
+                flipbook.turn("display", "double");
+
+                // Kembalikan ukuran fisik ke asli (960x680)
+                flipbook.turn("size", baseWidth, baseHeight);
+
+                // --- HITUNG SKALA (SCALING) ---
+                // Kita hitung perbandingan layar vs buku.
+                // Mana yang lebih sempit? Lebar atau Tinggi?
+                var scaleX = (width - 60) / baseWidth;   // Minus 60px buat napas kiri-kanan
+                var scaleY = (height - 60) / baseHeight; // Minus 60px buat napas atas-bawah
+                
+                // Pilih nilai terkecil agar buku MUAT SEUTUHNYA
+                var scale = Math.min(scaleX, scaleY);
+
+                // Batas Maksimal (Supaya gak terlalu zoom pecah di layar raksasa)
+                if (scale > 1.2) scale = 1.2;
+
+                // Terapkan Zoom Out/In menggunakan CSS Transform
+                container.css({
+                    "transform": "scale(" + scale + ")",
+                    "transform-origin": "center center", // Zoom dari tengah
+                    "width": baseWidth + "px",
+                    "height": baseHeight + "px"
+                });
+            }
         }
-      });
 
-      $(document).keydown(function (e) {
-        if (e.keyCode == 37) flipbook.turn('previous');
-        if (e.keyCode == 39) flipbook.turn('next');
-      });
+        // Jalankan fungsi resize saat pertama kali load
+        resizeViewport();
 
+        // Jalankan lagi setiap kali layar diubah ukurannya
+        $(window).resize(function() {
+            resizeViewport();
+        });
+
+        // 3. Hilangkan Loader setelah semua siap
+        setTimeout(function(){
+            loader.fadeOut(500, function() {
+                flipbook.addClass("loaded");
+            });
+        }, 500);
+
+        // 4. Tombol Navigasi
+        $("#prevBtn").click(function() { flipbook.turn("previous"); });
+        $("#nextBtn").click(function() { flipbook.turn("next"); });
+
+        // Keyboard Arrow
+        $(document).keydown(function(e){
+            if (e.keyCode == 37) flipbook.turn('previous');
+            if (e.keyCode == 39) flipbook.turn('next');
+        });
     });
-    
-  </script>
+</script>
 </body>
 
 </html>
