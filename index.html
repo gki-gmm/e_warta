@@ -102,13 +102,12 @@
                 // Set ukuran buku secara fisik
                 flipbook.turn("size", mobileWidth, mobileHeight);
                 
+                // Reset Scale CSS agar tidak bentrok
                 container.css({
-                    "transform": "scale(" + scale + ")",
-                    "transform-origin": "center top", // Zoom mulai dari Tengah-Atas
-                    "margin-top": "0px",              // Pastikan tidak ada margin tambahan
-                    
-                    "width": baseWidth + "px",
-                    "height": baseHeight + "px"
+                    "transform": "none",
+                    "width": mobileWidth + "px",
+                    "height": mobileHeight + "px",
+                    "margin-top": "0" 
                 });
 
             } else {
