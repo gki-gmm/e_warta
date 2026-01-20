@@ -4,67 +4,119 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <link rel="stylesheet" href="style.css" />
+  
+  <!-- Menggunakan Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
   <title>Warta Jemaat Digital</title>
+
 </head>
 
 <body>
 
+  <!-- Loader -->
   <div id="loader-overlay">
     <div class="spinner"></div>
     <div class="loading-text">Memuat Warta...</div>
   </div>
 
-  <div class="viewport">
+  <!-- Audio Element (Hidden) -->
+  <!-- Pastikan file ini ada di folder yang sama -->
+  <audio id="pageFlipSound" src="mixkit-page-turn-single-1104.wav" preload="auto"></audio>
 
+  <div class="viewport">
     <div class="book-container">
       <div class="flipbook">
         <!-- Cover Depan -->
-        <div class="hard"><img src="images/cover1.webp" alt="" /></div>
+        <div class="hard"><img src="https://picsum.photos/seed/cover1/960/680.webp" alt="Cover Depan" /></div>
 
-        <!-- Cover Dalam Depan (Akan dihapus di Mobile) -->
-        <div class="hard inside-cover"><img src="images/coverin1.webp" alt="" /></div>
+        <!-- Cover Dalam Depan -->
+        <div class="hard inside-cover"><img src="https://picsum.photos/seed/in1/960/680.webp" alt="Inside Cover 1" /></div>
 
         <!-- Halaman Isi -->
-        <div><img src="images/page1.webp" alt="" /></div>
-        <div><img src="images/page2.webp" alt="" /></div>
-        <div><img src="images/page3.webp" alt="" /></div>
-        <div><img src="images/page4.webp" alt="" /></div>
-        <div><img src="images/page5.webp" alt="" /></div>
-        <div><img src="images/page6.webp" alt="" /></div>
-        <div><img src="images/page7.webp" alt="" /></div>
-        <div><img src="images/page8.webp" alt="" /></div>
-        <div><img src="images/page9.webp" alt="" /></div>
-        <div><img src="images/page10.webp" alt="" /></div>
-        <div><img src="images/page11.webp" alt="" /></div>
-        <div><img src="images/page12.webp" alt="" /></div>
-
-        <!-- Cover Dalam Belakang (Akan dihapus di Mobile) -->
-        <div class="hard inside-cover"><img src="images/coverin2.webp" alt="" /></div>
+        <div><img src="https://picsum.photos/seed/page1/960/680.webp" alt="Page 1" /></div>
+        <div><img src="https://picsum.photos/seed/page2/960/680.webp" alt="Page 2" /></div>
+        <div><img src="https://picsum.photos/seed/page3/960/680.webp" alt="Page 3" /></div>
+        <div><img src="https://picsum.photos/seed/page4/960/680.webp" alt="Page 4" /></div>
+        <div><img src="https://picsum.photos/seed/page5/960/680.webp" alt="Page 5" /></div>
+        <div><img src="https://picsum.photos/seed/page6/960/680.webp" alt="Page 6" /></div>
+        <div><img src="https://picsum.photos/seed/page7/960/680.webp" alt="Page 7" /></div>
+        <div><img src="https://picsum.photos/seed/page8/960/680.webp" alt="Page 8" /></div>
+        
+        <!-- Cover Dalam Belakang -->
+        <div class="hard inside-cover"><img src="https://picsum.photos/seed/in2/960/680.webp" alt="Inside Cover 2" /></div>
 
         <!-- Cover Belakang -->
-        <div class="hard"><img src="images/cover2.webp" alt="" /></div>
+        <div class="hard"><img src="https://picsum.photos/seed/cover2/960/680.webp" alt="Cover Belakang" /></div>
       </div>
     </div>
   </div>
 
   <div class="controls">
-    <button class="btn" id="prevBtn"><i class="fa-solid fa-chevron-left"></i></button>
-    <button class="btn" id="zoomOut"><i class="fa-solid fa-minus"></i></button>
-    <button class="btn" id="zoomIn"><i class="fa-solid fa-plus"></i></button>
-    <button class="btn" id="nextBtn"><i class="fa-solid fa-chevron-right"></i></button>
+    <button class="btn" id="prevBtn" title="Sebelumnya"><i class="fa-solid fa-chevron-left"></i></button>
+    
+    <!-- Tombol Sound Toggle -->
+    <button class="btn" id="toggleSound" title="Bunyi">
+      <i class="fa-solid fa-volume-high" id="soundIcon"></i>
+    </button>
+    
+    <button class="btn" id="zoomOut" title="Perkecil"><i class="fa-solid fa-minus"></i></button>
+    <button class="btn" id="zoomIn" title="Perbesar"><i class="fa-solid fa-plus"></i></button>
+    <button class="btn" id="nextBtn" title="Selanjutnya"><i class="fa-solid fa-chevron-right"></i></button>
   </div>
 
+  <!-- Memuat Library jQuery & Turn.js dari CDN agar kode ini bisa langsung dijalankan -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/turn.js/4/turn.min.js"></script>
+  <!-- Jika Anda menggunakan file lokal, hapus 2 barus di atas dan uncomment baris di bawah:
   <script src="jquery.js"></script>
   <script src="turn.js"></script>
+  -->
 
   <script>
     $(window).on('load', function() {
         var flipbook = $(".flipbook");
         var loader = $("#loader-overlay");
+        var audio = document.getElementById("pageFlipSound");
+        
+        // Status Suara (Default: ON)
+        var isSoundOn = true;
 
-        // 1. Inisialisasi Turn.js dengan ukuran default Desktop
+        // --- LOGIKA AUDIO ---
+        
+        // Fungsi untuk memainkan suara
+        function playPageSound() {
+            if (isSoundOn && audio) {
+                // Reset waktu ke 0 agar bisa diputar berulang kali dengan cepat
+                audio.currentTime = 0;
+                // Coba play, tangani error jika browser memblokir autoplay
+                var playPromise = audio.play();
+                
+                if (playPromise !== undefined) {
+                    playPromise.catch(error => {
+                        console.log("Audio play blocked (User belum berinteraksi): ", error);
+                        // Browser modern memblokir audio sampai user mengklik sesuatu.
+                        // Biasanya teratasi saat user menekan tombol navigasi.
+                    });
+                }
+            }
+        }
+
+        // Event Listener untuk Tombol Suara
+        $("#toggleSound").on("click", function() {
+            isSoundOn = !isSoundOn;
+            var icon = $("#soundIcon");
+            
+            if (isSoundOn) {
+                icon.removeClass("fa-volume-xmark").addClass("fa-volume-high");
+                // Opsional: Bunyi kecil saat mengaktifkan
+                // audio.play(); 
+            } else {
+                icon.removeClass("fa-volume-high").addClass("fa-volume-xmark");
+            }
+        });
+
+        // 1. Inisialisasi Turn.js
         flipbook.turn({
             width: 960,
             height: 680,
@@ -74,13 +126,18 @@
             elevation: 50,
             duration: 1000,
             when: {
+                // Event saat halaman mulai berbalik
                 turning: function(e, page, view) {
-                    // Bunyi kertas (opsional)
+                    playPageSound(); // Panggil fungsi suara
+                },
+                // Event saat halaman selesai berbalik
+                turned: function(e, page, view) {
+                    // Logika tambahan jika diperlukan setelah halaman terbuka
                 }
             }
         });
 
-        // 2. Fungsi Penyesuai Ukuran Layar (RESPONSIVE MASTER)
+        // 2. Fungsi Penyesuai Ukuran Layar (RESPONSIVE)
         function resizeViewport() {
             var width = $(window).width();
             var height = $(window).height();
@@ -92,17 +149,12 @@
 
             if (width < 768) {
                 // === LOGIKA HP (MOBILE) ===
-                // Ubah ke mode satu halaman (Single Page)
                 flipbook.turn("display", "single");
+                var mobileWidth = width - 20; 
+                var mobileHeight = mobileWidth * 1.414; 
 
-                // Hitung ukuran pas layar HP
-                var mobileWidth = width - 20; // Kasih jarak kiri kanan dikit
-                var mobileHeight = mobileWidth * 1.414; // Rasio A4
-
-                // Set ukuran buku secara fisik
                 flipbook.turn("size", mobileWidth, mobileHeight);
                 
-                // Reset Scale CSS agar tidak bentrok
                 container.css({
                     "transform": "none",
                     "width": mobileWidth + "px",
@@ -112,43 +164,29 @@
 
             } else {
                 // === LOGIKA DESKTOP (PC / TABLET) ===
-                // Pastikan mode dua halaman (Double Page)
                 flipbook.turn("display", "double");
-
-                // Kembalikan ukuran fisik ke asli (960x680)
                 flipbook.turn("size", baseWidth, baseHeight);
 
-                // --- HITUNG SKALA (SCALING) ---
-                // Kita hitung perbandingan layar vs buku.
-                // Mana yang lebih sempit? Lebar atau Tinggi?
-                var scaleX = (width - 60) / baseWidth;   // Minus 60px buat napas kiri-kanan
-                var scaleY = (height - 60) / baseHeight; // Minus 60px buat napas atas-bawah
-                
-                // Pilih nilai terkecil agar buku MUAT SEUTUHNYA
+                var scaleX = (width - 60) / baseWidth;   
+                var scaleY = (height - 60) / baseHeight; 
                 var scale = Math.min(scaleX, scaleY);
 
-                // Batas Maksimal (Supaya gak terlalu zoom pecah di layar raksasa)
                 if (scale > 1.2) scale = 1.2;
 
-                // Terapkan Zoom Out/In menggunakan CSS Transform
                 container.css({
                     "transform": "scale(" + scale + ")",
-                    "transform-origin": "center center", // Zoom dari tengah
+                    "transform-origin": "center center",
                     "width": baseWidth + "px",
                     "height": baseHeight + "px"
                 });
             }
         }
 
-        // Jalankan fungsi resize saat pertama kali load
+        // Jalankan Resize
         resizeViewport();
+        $(window).resize(function() { resizeViewport(); });
 
-        // Jalankan lagi setiap kali layar diubah ukurannya
-        $(window).resize(function() {
-            resizeViewport();
-        });
-
-        // 3. Hilangkan Loader setelah semua siap
+        // 3. Hilangkan Loader
         setTimeout(function(){
             loader.fadeOut(500, function() {
                 flipbook.addClass("loaded");
@@ -156,16 +194,70 @@
         }, 500);
 
         // 4. Tombol Navigasi
-        $("#prevBtn").click(function() { flipbook.turn("previous"); });
-        $("#nextBtn").click(function() { flipbook.turn("next"); });
+        $("#prevBtn").click(function() { 
+            // Pastikan audio bisa jalan karena ini adalah interaksi user
+            playPageSound(); 
+            flipbook.turn("previous"); 
+        });
+        
+        $("#nextBtn").click(function() { 
+            playPageSound(); 
+            flipbook.turn("next"); 
+        });
 
         // Keyboard Arrow
         $(document).keydown(function(e){
-            if (e.keyCode == 37) flipbook.turn('previous');
-            if (e.keyCode == 39) flipbook.turn('next');
+            if (e.keyCode == 37) {
+                flipbook.turn('previous');
+            }
+            if (e.keyCode == 39) {
+                flipbook.turn('next');
+            }
         });
-    });
-</script>
-</body>
+        
+        // Fitur Zoom In/Out Sederhana (Dengan Manipulasi Scale)
+        var currentZoomScale = 1;
+        
+        $("#zoomIn").click(function(){
+            if(currentZoomScale < 2) {
+                currentZoomScale += 0.1;
+                applyZoom();
+            }
+        });
+        
+        $("#zoomOut").click(function(){
+            if(currentZoomScale > 0.6) {
+                currentZoomScale -= 0.1;
+                applyZoom();
+            }
+        });
+        
+        function applyZoom() {
+            var container = $(".book-container");
+            // Kita ambil scale CSS saat ini (dari responsive) lalu kalikan dengan zoom user
+            var width = $(window).width();
+            var baseWidth = 960;
+            
+            // Hitung ulang base scale dari responsive logic untuk menjaga posisi
+            var baseScale = 1; 
+            if (width >= 768) {
+                 var scaleX = (width - 60) / baseWidth;
+                 var scaleY = ($(window).height() - 60) / 680;
+                 baseScale = Math.min(scaleX, scaleY);
+                 if (baseScale > 1.2) baseScale = 1.2;
+            }
+            
+            var finalScale = baseScale * currentZoomScale;
+            
+            container.css("transform", "scale(" + finalScale + ")");
+        }
+        
+        // Re-apply zoom saat window resize
+        $(window).resize(function() {
+            applyZoom();
+        });
 
+    });
+  </script>
+</body>
 </html>
