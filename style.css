@@ -50,7 +50,7 @@ body {
 /* Container Utama */
 .book-container {
     position: relative;
-    width: 960px; height: 680px;
+    width: 960px; height: 660px;
     
     /* --- PERBAIKAN 1: Hapus Flexbox di container --- */
     /* display: flex; justify-content: center; align-items: center; <--- HAPUS INI */
