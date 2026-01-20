@@ -80,26 +80,24 @@
 
     <script>
         $(window).on('load', function () {
+            // 1. Inisialisasi Variabel Utama
             var flipbook = $(".flipbook");
             var loader = $("#loader-overlay");
             var audio = document.getElementById("pageFlipSound");
-            var isSoundOn = true;
+            var isSoundOn = true; // Status suara global
+            var currentZoomScale = 1;
 
+            // 2. Fungsi Suara
             function playPageSound() {
-                // Mengecek apakah status suara aktif (true) dan file audio tersedia
                 if (isSoundOn && audio) {
-                    audio.currentTime = 0; // Reset ke awal agar suara tidak tumpang tindih
-                    var playPromise = audio.play();
-
-                    if (playPromise !== undefined) {
-                        playPromise.catch(error => {
-                            console.log("Autoplay diblokir browser sampai ada interaksi user.");
-                        });
-                    }
+                    audio.currentTime = 0;
+                    audio.play().catch(function (error) {
+                        console.log("Autoplay diblokir browser");
+                    });
                 }
             }
 
-            // 1. Inisialisasi Turn.js
+            // 3. Inisialisasi Turn.js
             flipbook.turn({
                 width: 960,
                 height: 680,
@@ -113,7 +111,6 @@
                         playPageSound();
                     },
                     turned: function (e, page, view) {
-                        // Update Label Halaman otomatis saat dibalik
                         var totalPages = flipbook.turn("pages");
                         var pageLabel = (view[0] || view[1]) ? view.join("/") : page;
                         $("#pageLabel").text(pageLabel + " / " + totalPages);
@@ -121,26 +118,52 @@
                 }
             });
 
-            // 2. Navigasi Panah Samping
-            $("#prevBtn").click(function () { flipbook.turn("previous"); });
-            $("#nextBtn").click(function () { flipbook.turn("next"); });
+            // 4. Logika Tombol Suara (PERBAIKAN DI SINI)
+            $("#toggleSoundMenu").on("click", function (e) {
+                e.stopPropagation(); // Mencegah menu tertutup
 
-            // 3. Logika Toolbar Bawah
+                isSoundOn = !isSoundOn; // Toggle status (true <-> false)
+
+                if (isSoundOn) {
+                    // Jika ON
+                    $(this).html('<i class="fa-solid fa-volume-high" id="soundIconMenu"></i> Turn off Sound');
+                    playPageSound();
+                } else {
+                    // Jika OFF
+                    $(this).html('<i class="fa-solid fa-volume-xmark" id="soundIconMenu"></i> Turn on Sound');
+                }
+                console.log("Status Suara:", isSoundOn);
+            });
+
+            // 5. Navigasi Panah Samping
+            $("#prevBtn").on("click", function () { flipbook.turn("previous"); });
+            $("#nextBtn").on("click", function () { flipbook.turn("next"); });
+
+            // 6. Logika Zoom
+            function applyZoom() {
+                var width = $(window).width();
+                var baseScale = 1;
+                if (width >= 768) {
+                    var scaleX = (width - 60) / 960;
+                    var scaleY = ($(window).height() - 60) / 680;
+                    baseScale = Math.min(scaleX, scaleY);
+                    if (baseScale > 1.2) baseScale = 1.2;
+                }
+                $(".book-container").css("transform", "scale(" + (baseScale * currentZoomScale) + ")");
+            }
+
             $("#zoomIn").click(function () {
-                currentZoomScale = Math.min(currentZoomScale + 0.1, 2);
-                applyZoom();
+                if (currentZoomScale < 2) { currentZoomScale += 0.1; applyZoom(); }
             });
-
             $("#zoomOut").click(function () {
-                currentZoomScale = Math.max(currentZoomScale - 0.1, 0.6);
-                applyZoom();
+                if (currentZoomScale > 0.6) { currentZoomScale -= 0.1; applyZoom(); }
             });
 
+            // 7. Menu Popup & Fullscreen
             $("#menuBtn").click(function (e) {
                 e.stopPropagation();
                 $("#popupMenu").toggleClass("show");
             });
-
             $(document).click(function () { $("#popupMenu").removeClass("show"); });
 
             $("#firstPageBtn").click(function () { flipbook.turn("page", 1); });
@@ -154,29 +177,14 @@
                 }
             });
 
-            // 4. Fungsi Responsive & Zoom (Tetap seperti kode Anda)
-            var currentZoomScale = 1;
-            function applyZoom() {
-                var width = $(window).width();
-                var baseWidth = 960;
-                var baseScale = 1;
-                if (width >= 768) {
-                    var scaleX = (width - 60) / baseWidth;
-                    var scaleY = ($(window).height() - 60) / 680;
-                    baseScale = Math.min(scaleX, scaleY);
-                    if (baseScale > 1.2) baseScale = 1.2;
-                }
-                $(".book-container").css("transform", "scale(" + (baseScale * currentZoomScale) + ")");
-            }
-
+            // 8. Responsive Logic
             function resizeViewport() {
                 var width = $(window).width();
-                var container = $(".book-container");
                 if (width < 768) {
                     flipbook.turn("display", "single");
                     var mWidth = width - 20;
                     flipbook.turn("size", mWidth, mWidth * 1.414);
-                    container.css({ "transform": "none", "width": mWidth, "height": mWidth * 1.414 });
+                    $(".book-container").css({ "transform": "none", "width": mWidth, "height": mWidth * 1.414 });
                 } else {
                     flipbook.turn("display", "double");
                     flipbook.turn("size", 960, 680);
@@ -187,26 +195,10 @@
             $(window).resize(resizeViewport);
             resizeViewport();
 
+            // 9. Hilangkan Loader
             setTimeout(function () {
                 loader.fadeOut(500, function () { flipbook.addClass("loaded"); });
             }, 500);
-        });
-        // Event Listener untuk Tombol Suara di Menu Popup
-        $("#toggleSoundMenu").on("click", function (e) {
-            e.stopPropagation(); // Agar menu popup tidak langsung tertutup saat diklik
-
-            isSoundOn = !isSoundOn; // Membalik status suara (true jadi false, dst)
-            var icon = $("#soundIconMenu"); // Mengincar icon di dalam menu
-
-            if (isSoundOn) {
-                icon.removeClass("fa-volume-xmark").addClass("fa-volume-high");
-                $(this).html('<i class="fa-solid fa-volume-high" id="soundIconMenu"></i> Turn off Sound');
-                // Mainkan suara sekali sebagai feedback bahwa suara aktif
-                playPageSound();
-            } else {
-                icon.removeClass("fa-volume-high").addClass("fa-volume-xmark");
-                $(this).html('<i class="fa-solid fa-volume-xmark" id="soundIconMenu"></i> Turn on Sound');
-            }
         });
     </script>
 </body>
