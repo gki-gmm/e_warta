@@ -21,39 +21,83 @@ body {
 /* --- LOADER --- */
 #loader-overlay {
     position: fixed;
-    top: 0; left: 0; width: 100vw; height: 100vh;
-    background: #ffffff; z-index: 9999;
-    display: flex; flex-direction: column; justify-content: center; align-items: center;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: #ffffff;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     transition: opacity 0.5s ease-out;
 }
+
 .spinner {
-    width: 50px; height: 50px; border: 3px solid rgba(0,0,0,0.1);
-    border-radius: 50%; border-top-color: #333;
-    animation: spin 1s ease-in-out infinite; margin-bottom: 20px;
+    width: 50px;
+    height: 50px;
+    border: 3px solid rgba(0, 0, 0, 0.1);
+    border-radius: 50%;
+    border-top-color: #333;
+    animation: spin 1s ease-in-out infinite;
+    margin-bottom: 20px;
 }
+
 .loading-text {
-    color: #333; font-size: 14px; letter-spacing: 3px;
-    text-transform: uppercase; font-weight: 300; animation: pulse 1.5s infinite;
+    color: #333;
+    font-size: 14px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    font-weight: 300;
+    animation: pulse 1.5s infinite;
 }
-@keyframes spin { to { transform: rotate(360deg); } }
-@keyframes pulse { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; } }
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes pulse {
+    0% {
+        opacity: 0.5;
+    }
+
+    50% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0.5;
+    }
+}
 
 /* --- VIEWPORT --- */
 .viewport {
-    width: 100%; height: 100%;
-    display: flex; justify-content: center; align-items: center;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    /* Menumpuk buku dan tombol secara vertikal */
+    justify-content: center;
+    align-items: center;
     position: relative;
+    gap: 30px;
+    /* Memberi jarak antara buku dan tombol navigasi */
+    padding: 20px 0;
 }
 
 /* Container Utama */
 .book-container {
     position: relative;
-    width: 960px; height: 680px;
-    
+    width: 960px;
+    height: 680px;
+
     /* --- PERBAIKAN 1: Hapus Flexbox di container --- */
     /* display: flex; justify-content: center; align-items: center; <--- HAPUS INI */
     /* Kita biarkan Turn.js yang mengatur posisi tengah menggunakan margin-left */
-    
+
     transition: transform 0.6s ease;
     /* overflow: hidden; (Opsional: tambahkan jika halaman mau keluar border saat dibalik) */
 }
@@ -62,35 +106,46 @@ body {
 .flipbook {
     /* --- PERBAIKAN 2: Hapus transition margin-left --- */
     /* Jangan beri transition pada margin-left karena Turn.js mengubahnya secara real-time */
-    background: none; 
+    background: none;
     box-shadow: none;
-    opacity: 0; 
+    opacity: 0;
     visibility: hidden;
-    
+
     /* Hanya transisikan opacity dan visibility */
     transition: opacity 0.6s ease-in-out, visibility 0.6s;
-    
+
     /* Pastikan lebar mengikuti setting JS (biasanya setengah dari container) */
     /* width: 480px; height: 600px; <--- Diatur via JS, tapi bisa dipaksa di CSS jika perlu */
 }
 
-.flipbook.loaded { opacity: 1; visibility: visible; }
+.flipbook.loaded {
+    opacity: 1;
+    visibility: visible;
+}
 
 /* Garis Tengah (Spine) */
 .flipbook.show-spine {
-    background: linear-gradient(to right, rgba(0,0,0,0) 48%, rgba(0,0,0,0.15) 50%, rgba(0,0,0,0) 52%);
+    background: linear-gradient(to right, rgba(0, 0, 0, 0) 48%, rgba(0, 0, 0, 0.15) 50%, rgba(0, 0, 0, 0) 52%);
 }
 
 .flipbook .page {
-    background-color: white; transform-style: preserve-3d;
-    position: relative; z-index: 1;
+    background-color: white;
+    transform-style: preserve-3d;
+    position: relative;
+    z-index: 1;
 }
 
 .flipbook img {
-    width: 100%; height: 100%; object-fit: fill;
-    display: block; user-select: none; pointer-events: none;
-    -webkit-backface-visibility: hidden; backface-visibility: hidden;
+    width: 100%;
+    height: 100%;
+    object-fit: fill;
+    display: block;
+    user-select: none;
+    pointer-events: none;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
 }
+
 .flipbook .hard {
     background: #fff !important;
     color: #333;
@@ -105,36 +160,98 @@ body {
 
 /* Overlay Shadow Halaman (Lipatan) */
 .flipbook .page::after {
-    content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-    z-index: 10; pointer-events: none; opacity: 1; transition: opacity 0.3s;
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 10;
+    pointer-events: none;
+    opacity: 1;
+    transition: opacity 0.3s;
 }
 
 @media (min-width: 768px) {
-    .flipbook .page.even::after { background: linear-gradient(to right, rgba(0,0,0,0) 95%, rgba(0,0,0,0.1) 100%); }
-    .flipbook .page.odd::after { background: linear-gradient(to right, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0) 5%); }
-    .flipbook .page.p1::after { background: none; }
-    .flipbook .page.last::after { background: none; } 
+    .flipbook .page.even::after {
+        background: linear-gradient(to right, rgba(0, 0, 0, 0) 95%, rgba(0, 0, 0, 0.1) 100%);
+    }
+
+    .flipbook .page.odd::after {
+        background: linear-gradient(to right, rgba(0, 0, 0, 0.1) 0%, rgba(0, 0, 0, 0) 5%);
+    }
+
+    .flipbook .page.p1::after {
+        background: none;
+    }
+
+    .flipbook .page.last::after {
+        background: none;
+    }
 }
 
 @media (max-width: 767px) {
-    .flipbook .page::after { background: none; }
+    .flipbook .page::after {
+        background: none;
+    }
+
     /* Di Mobile, sembunyikan semua shadow custom agar tidak berat/aneh */
-    .book-container { width: auto; height: auto; 
-    justify-content: center;
-    align-items: flex-start;}
+    .book-container {
+        width: auto;
+        height: auto;
+        justify-content: center;
+        align-items: flex-start;
+    }
 }
 
 /* --- CONTROLS --- */
 .controls {
-    background: rgba(0, 0, 0, 0.391); color: white;
-    position: fixed; bottom: 20px; left: 50%;
-    transform: translateX(-50%); padding: 8px 20px;
-    border-radius: 50px; display: flex; gap: 15px; z-index: 999;
+    background: rgba(0, 0, 0, 0.7);
+    /* Dibuat sedikit lebih gelap agar jelas */
+    color: white;
+    position: relative;
+    /* Berubah dari fixed ke relative */
+    bottom: 0;
+    left: 0;
+    transform: none;
+    /* Hapus transform translateX */
+    padding: 10px 25px;
+    border-radius: 50px;
+    display: flex;
+    gap: 15px;
+    z-index: 999;
+    margin-top: 20px;
+    /* Jarak tambahan dari buku */
 }
+
 .btn {
-    background: none; border: none; color: white; font-size: 16px;
-    cursor: pointer; transition: 0.2s; width: 35px; height: 35px;
-    display: flex; justify-content: center; align-items: center;
+    background: none;
+    border: none;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    transition: 0.2s;
+    width: 35px;
+    height: 35px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
-.btn:hover { background: rgba(255, 255, 255, 0.2); transform: scale(1.1); }
-@media (max-width: 600px) { .controls { bottom: 15px; width: 90%; justify-content: space-around; } }
+
+.btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: scale(1.1);
+}
+
+@media (max-width: 600px) {
+    .viewport {
+        justify-content: flex-start;
+        /* Agar di HP tidak terlalu ke tengah jika konten panjang */
+        padding-top: 40px;
+    }
+
+    .controls {
+        width: fit-content;
+        margin-bottom: 20px;
+    }
+}
