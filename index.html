@@ -188,6 +188,23 @@ apakah Benar seperti ini?
             loader.fadeOut(500, function () { flipbook.addClass("loaded"); });
         }, 500);
     });
+    // Event Listener untuk Tombol Suara di Menu Popup
+$("#toggleSoundMenu").on("click", function (e) {
+    e.stopPropagation(); // Agar menu popup tidak langsung tertutup saat diklik
+    
+    isSoundOn = !isSoundOn; // Membalik status suara (true jadi false, dst)
+    var icon = $("#soundIconMenu"); // Mengincar icon di dalam menu
+
+    if (isSoundOn) {
+        icon.removeClass("fa-volume-xmark").addClass("fa-volume-high");
+        $(this).html('<i class="fa-solid fa-volume-high" id="soundIconMenu"></i> Turn off Sound');
+        // Mainkan suara sekali sebagai feedback bahwa suara aktif
+        playPageSound(); 
+    } else {
+        icon.removeClass("fa-volume-high").addClass("fa-volume-xmark");
+        $(this).html('<i class="fa-solid fa-volume-xmark" id="soundIconMenu"></i> Turn on Sound');
+    }
+});
 </script>
 </body>
 
