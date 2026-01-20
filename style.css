@@ -83,6 +83,7 @@ body {
     position: relative; /* WAJIB: Agar tombol absolute tetap di dalam sini */
     overflow: hidden;   /* Mencegah scrollbar muncul di dalam embed */
     gap: 2px;
+    flex-direction: column;
 }
 
 .book-container {
