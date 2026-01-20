@@ -3,48 +3,169 @@
 
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <link rel="stylesheet" href="style.css" />
-  <title>Pokemon Magazine</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <title>Warta Jemaat Digital</title>
 </head>
 
 <body>
-  <div class="flipbook">
-    <div class="hard">My Pokemon Gallery <small>~ HankTheTank</small></div>
-    <div class="hard"></div>
-    <div>
-      <small>Lets Look At Some Amazing Pokemon ❤️</small>
-      <small>Gotta Catch 'Em All</small>
+
+  <div id="loader-overlay">
+    <div class="spinner"></div>
+    <div class="loading-text">Memuat Warta...</div>
+  </div>
+
+  <div class="viewport">
+
+    <div class="book-container">
+      <div class="flipbook">
+        <!-- Cover Depan -->
+        <div class="hard"><img src="images/cover1.webp" alt="" /></div>
+
+        <!-- Cover Dalam Depan (Akan dihapus di Mobile) -->
+        <div class="hard inside-cover"><img src="images/coverin1.webp" alt="" /></div>
+
+        <!-- Halaman Isi -->
+        <div><img src="images/page1.webp" alt="" /></div>
+        <div><img src="images/page2.webp" alt="" /></div>
+        <div><img src="images/page3.webp" alt="" /></div>
+        <div><img src="images/page4.webp" alt="" /></div>
+        <div><img src="images/page5.webp" alt="" /></div>
+        <div><img src="images/page6.webp" alt="" /></div>
+        <div><img src="images/page7.webp" alt="" /></div>
+        <div><img src="images/page8.webp" alt="" /></div>
+        <div><img src="images/page9.webp" alt="" /></div>
+        <div><img src="images/page10.webp" alt="" /></div>
+        <div><img src="images/page11.webp" alt="" /></div>
+        <div><img src="images/page12.webp" alt="" /></div>
+
+        <!-- Cover Dalam Belakang (Akan dihapus di Mobile) -->
+        <div class="hard inside-cover"><img src="images/coverin2.webp" alt="" /></div>
+
+        <!-- Cover Belakang -->
+        <div class="hard"><img src="images/cover2.webp" alt="" /></div>
+      </div>
     </div>
-    <div>
-      <img src="images/img-1.png" alt="" />
-      <small> Charmandar </small>
-    </div>
-    <div>
-      <img src="images/img-2.png" alt="" />
-      <small> Arbok </small>
-    </div>
-    <div>
-      <img src="images/img-3.png" alt="" />
-      <small> Pikachu </small>
-    </div>
-    <div>
-      <img src="images/img-4.png" alt="" />
-      <small> Mew </small>
-    </div>
-    <div>
-      <img src="images/img-5.png" alt="" />
-      <small> Darkrai </small>
-    </div>
-    <div class="hard"></div>
-    <div class="hard">Thank You <small>~ HankTheTank</small></div>
+  </div>
+
+  <div class="controls">
+    <button class="btn" id="prevBtn"><i class="fa-solid fa-chevron-left"></i></button>
+    <button class="btn" id="zoomOut"><i class="fa-solid fa-minus"></i></button>
+    <button class="btn" id="zoomIn"><i class="fa-solid fa-plus"></i></button>
+    <button class="btn" id="nextBtn"><i class="fa-solid fa-chevron-right"></i></button>
   </div>
 
   <script src="jquery.js"></script>
   <script src="turn.js"></script>
+
   <script>
-    $(".flipbook").turn();
-  </script>
+    $(window).on('load', function() {
+        var flipbook = $(".flipbook");
+        var loader = $("#loader-overlay");
+
+        // 1. Inisialisasi Turn.js dengan ukuran default Desktop
+        flipbook.turn({
+            width: 960,
+            height: 680,
+            autoCenter: true,
+            acceleration: true,
+            gradients: true,
+            elevation: 50,
+            duration: 1000,
+            when: {
+                turning: function(e, page, view) {
+                    // Bunyi kertas (opsional)
+                }
+            }
+        });
+
+        // 2. Fungsi Penyesuai Ukuran Layar (RESPONSIVE MASTER)
+        function resizeViewport() {
+            var width = $(window).width();
+            var height = $(window).height();
+            var container = $(".book-container");
+
+            // Ukuran Asli Buku (Base Size)
+            var baseWidth = 960;
+            var baseHeight = 680;
+
+            if (width < 768) {
+                // === LOGIKA HP (MOBILE) ===
+                // Ubah ke mode satu halaman (Single Page)
+                flipbook.turn("display", "single");
+
+                // Hitung ukuran pas layar HP
+                var mobileWidth = width - 20; // Kasih jarak kiri kanan dikit
+                var mobileHeight = mobileWidth * 1.414; // Rasio A4
+
+                // Set ukuran buku secara fisik
+                flipbook.turn("size", mobileWidth, mobileHeight);
+                
+                // Reset Scale CSS agar tidak bentrok
+                container.css({
+                    "transform": "none",
+                    "width": mobileWidth + "px",
+                    "height": mobileHeight + "px",
+                    "margin-top": "0" 
+                });
+
+            } else {
+                // === LOGIKA DESKTOP (PC / TABLET) ===
+                // Pastikan mode dua halaman (Double Page)
+                flipbook.turn("display", "double");
+
+                // Kembalikan ukuran fisik ke asli (960x680)
+                flipbook.turn("size", baseWidth, baseHeight);
+
+                // --- HITUNG SKALA (SCALING) ---
+                // Kita hitung perbandingan layar vs buku.
+                // Mana yang lebih sempit? Lebar atau Tinggi?
+                var scaleX = (width - 60) / baseWidth;   // Minus 60px buat napas kiri-kanan
+                var scaleY = (height - 60) / baseHeight; // Minus 60px buat napas atas-bawah
+                
+                // Pilih nilai terkecil agar buku MUAT SEUTUHNYA
+                var scale = Math.min(scaleX, scaleY);
+
+                // Batas Maksimal (Supaya gak terlalu zoom pecah di layar raksasa)
+                if (scale > 1.2) scale = 1.2;
+
+                // Terapkan Zoom Out/In menggunakan CSS Transform
+                container.css({
+                    "transform": "scale(" + scale + ")",
+                    "transform-origin": "center center", // Zoom dari tengah
+                    "width": baseWidth + "px",
+                    "height": baseHeight + "px"
+                });
+            }
+        }
+
+        // Jalankan fungsi resize saat pertama kali load
+        resizeViewport();
+
+        // Jalankan lagi setiap kali layar diubah ukurannya
+        $(window).resize(function() {
+            resizeViewport();
+        });
+
+        // 3. Hilangkan Loader setelah semua siap
+        setTimeout(function(){
+            loader.fadeOut(500, function() {
+                flipbook.addClass("loaded");
+            });
+        }, 500);
+
+        // 4. Tombol Navigasi
+        $("#prevBtn").click(function() { flipbook.turn("previous"); });
+        $("#nextBtn").click(function() { flipbook.turn("next"); });
+
+        // Keyboard Arrow
+        $(document).keydown(function(e){
+            if (e.keyCode == 37) flipbook.turn('previous');
+            if (e.keyCode == 39) flipbook.turn('next');
+        });
+    });
+</script>
 </body>
 
 </html>
