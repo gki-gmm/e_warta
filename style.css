@@ -203,4 +203,4 @@ body {
 }
 .menu-item:hover { background: #f9f9f9; }
 
-@media (max-width: 600px) { .controls { bottom: 2px; width: 90%; justify-content: space-around; } }
+@media (max-width: 600px) { .controls { bottom: 20px; width: 100%; justify-content: space-around; } }
