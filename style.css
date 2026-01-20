@@ -200,54 +200,129 @@ body {
     }
 }
 
-/* --- NAVIGASI MELAYANG (FLOATING) --- */
-.controls {
-    background: none; 
-    position: absolute; /* Ubah dari fixed ke absolute */
-    bottom: 30px;       /* Jarak dari dasar viewport */
-    left: 0;
-    right: 0;
-    width: 100%;
-    height: 0; 
-    display: flex;
-    justify-content: space-between; 
-    align-items: flex-end;
-    padding: 0 30px;    /* Beri jarak sedikit dari pinggir agar tidak terlalu mepet */
+/* --- TOOLBAR CONTAINER --- */
+.toolbar-container {
+    position: absolute;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
     z-index: 1000;
-    pointer-events: none; 
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
+/* --- TOOLBAR UTAMA --- */
+.toolbar {
+    background: #ffffff;
+    color: #5f6368; /* Warna ikon abu-abu */
+    padding: 8px 15px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+    border: 1px solid rgba(0,0,0,0.1);
+}
+
+/* --- TOMBOL TOOLBAR --- */
 .btn {
-    pointer-events: auto;
-    background: rgba(59, 59, 59, 0.6); 
-    color: white;
-    width: 55px;
-    height: 55px;
+    background: none;
+    border: none;
+    color: #5f6368;
+    font-size: 18px;
+    cursor: pointer;
+    width: 36px;
+    height: 36px;
     border-radius: 50%;
-    border: 2px solid rgba(255, 255, 255, 0.3);
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 24px; /* Perbesar sedikit iconnya */
+    transition: background 0.2s;
+}
+
+.btn:hover, .btn.active {
+    background: rgba(0,0,0,0.05);
+    color: #202124;
+}
+
+/* --- INDIKATOR HALAMAN --- */
+.page-indicator {
+    font-size: 14px;
+    font-weight: 500;
+    color: #3c4043;
+    padding: 0 10px;
+    white-space: nowrap;
+}
+
+/* --- PEMISAH VERTIKAL --- */
+.separator {
+    width: 1px;
+    height: 24px;
+    background: rgba(0,0,0,0.15);
+    margin: 0 5px;
+}
+
+/* --- POPUP MENU --- */
+.popup-menu {
+    background: #ffffff;
+    border-radius: 8px;
+    padding: 8px 0;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+    border: 1px solid rgba(0,0,0,0.1);
+    margin-bottom: 15px;
+    display: none; /* Tersembunyi secara default */
+    flex-direction: column;
+    width: 200px;
+}
+
+.popup-menu.show {
+    display: flex;
+}
+
+.menu-item {
+    background: none;
+    border: none;
+    color: #3c4043;
+    font-size: 14px;
+    padding: 10px 20px;
+    text-align: left;
     cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    transition: background 0.2s;
 }
 
-/* Sembunyikan zoom agar fokus pada Prev/Next */
-#zoomIn, #zoomOut {
-    display: none;
+.menu-item:hover {
+    background: rgba(0,0,0,0.05);
 }
 
-/* Responsif untuk Mobile */
-@media (max-width: 600px) {
-    .btn {
-        width: 45px;
-        height: 45px;
-        font-size: 18px;
+.menu-item i {
+    font-size: 16px;
+    width: 20px;
+    text-align: center;
+    color: #5f6368;
+}
+
+/* --- RESPONSIVE MOBILE --- */
+@media (max-width: 767px) {
+    .toolbar {
+        padding: 5px 10px;
+        gap: 5px;
     }
-    .controls {
-        bottom: 15px;
-        padding: 0 15px;
+    .btn {
+        width: 32px;
+        height: 32px;
+        font-size: 16px;
+    }
+    .page-indicator {
+        font-size: 12px;
+        padding: 0 5px;
+    }
+    /* Sembunyikan tombol yang kurang penting di HP */
+    .btn[title="Print"], .btn[title="Download"], .btn[title="Thumbnails"] {
+        display: none;
     }
 }
