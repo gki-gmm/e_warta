@@ -83,7 +83,7 @@ body {
     align-items: center;    /* Menengahkan secara horizontal */
     background: #f0f0f0;    /* Warna latar belakang agar buku terlihat jelas */
     position: relative;
-    gap: 30px;              /* Memberi jarak aman antara buku dan toolbar */
+    gap: 2px;              /* Memberi jarak aman antara buku dan toolbar */
 }
 
 /* --- BOOK CONTAINER --- */
@@ -275,5 +275,5 @@ body {
 /* Sembunyikan panah di layar sangat kecil agar tidak menutupi buku */
 @media (max-width: 600px) {
     .nav-side { font-size: 30px; padding: 10px; }
-    .viewport { gap: 15px; }
+    .viewport { gap: 2px; }
 }
