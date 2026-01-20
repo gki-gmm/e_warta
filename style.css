@@ -152,7 +152,7 @@ body {
 .toolbar-container {
     position: relative;
     bottom: 2px;
-    left: 7%;
+    left: 9%;
     transform: translateX(-50%);
     z-index: 1001;
     display: flex;
