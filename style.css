@@ -219,7 +219,7 @@ body {
 
 .btn {
     pointer-events: auto;
-    background: rgba(0, 0, 0, 0.6); 
+    background: rgba(59, 59, 59, 0.6); 
     color: white;
     width: 55px;
     height: 55px;
