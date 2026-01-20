@@ -73,25 +73,24 @@ body {
     }
 }
 
-/* --- VIEWPORT --- */
+/* --- VIEWPORT TATA LETAK VERTIKAL --- */
 .viewport {
     width: 100vw;
     height: 100vh;
     display: flex;
-    flex-direction: column; /* Mengatur susunan vertikal */
-    justify-content: center; /* Menengahkan secara vertikal */
-    align-items: center;    /* Menengahkan secara horizontal */
-    background: #f0f0f0;    /* Warna latar belakang agar buku terlihat jelas */
+    flex-direction: column; /* Menumpuk elemen secara vertikal */
+    justify-content: center;
+    align-items: center;
+    background: #ffffff;
+    gap: 2px; /* Jarak antara buku dan toolbar */
     position: relative;
-    gap: 2px;              /* Memberi jarak aman antara buku dan toolbar */
+    overflow: hidden;
 }
 
-/* --- BOOK CONTAINER --- */
 .book-container {
     position: relative;
-    /* Pastikan tidak ada margin-top manual agar tidak bergeser */
-    margin: 0 !important; 
-    z-index: 5;
+    margin: 0 !important; /* Menghapus margin bawaan */
+    flex-shrink: 1; /* Memungkinkan buku mengecil jika layar sempit */
 }
 
 /* --- FLIPBOOK --- */
@@ -196,38 +195,27 @@ body {
     }
 }
 
-/* --- NAVIGASI SAMPING (PANAH) --- */
+/* --- TOOLBAR TETAP DI BAWAH --- */
+.toolbar-container {
+    position: relative; /* Tidak lagi melayang (absolute) */
+    z-index: 1000;
+    margin-bottom: 20px;
+}
+
+/* --- NAVIGASI SAMPING TETAP MELAYANG --- */
 .nav-side {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
     background: none;
     border: none;
-    color: rgba(0, 0, 0, 0.2);
-    font-size: 50px;
+    color: rgba(0,0,0,0.2);
+    font-size: 40px;
     cursor: pointer;
-    z-index: 100;
-    padding: 20px;
-    transition: all 0.3s ease;
+    z-index: 999;
 }
-
-.nav-side:hover {
-    color: rgba(0, 0, 0, 0.6);
-}
-
 .nav-side.left { left: 20px; }
 .nav-side.right { right: 20px; }
-/* --- TOOLBAR CONTAINER (TENGAH BAWAH) --- */
-/* --- TOOLBAR CONTAINER (Ganti bagian ini) --- */
-.toolbar-container {
-    /* Hapus position absolute agar tidak melayang di atas buku */
-    position: relative; 
-    z-index: 10;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
-}
 
 .toolbar {
     background: #ffffff;
