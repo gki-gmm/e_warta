@@ -20,12 +20,6 @@
 
     <div class="book-container">
       <div class="flipbook">
-        <audio id="page-flip-forward" preload="auto">
-            <source src="mixkit-page-turn-single-1104.wav" type="audio/mpeg">
-        </audio>
-        <audio id="page-flip-backward" preload="auto">
-            <source src="mixkit-page-turn-single-1104.wav" type="audio/mpeg">
-        </audio>
         <!-- Cover Depan -->
         <div class="hard"><img src="images/cover1.webp" alt="" /></div>
 
@@ -171,78 +165,6 @@
             if (e.keyCode == 39) flipbook.turn('next');
         });
     });
-    /*********************
-* PAGE FLIP SOUNDS *
-*********************/
-
-// Audio untuk efek suara maju dan mundur
-const pageFlipForward = document.getElementById('page-flip-forward');
-const pageFlipBackward = document.getElementById('page-flip-backward');
-
-// Atur volume
-if (pageFlipForward) pageFlipForward.volume = 0.5;
-if (pageFlipBackward) pageFlipBackward.volume = 0.5;
-
-// Fungsi untuk memutar suara maju
-function playForwardSound() {
-    if (!pageFlipForward) return;
-    
-    try {
-        pageFlipForward.currentTime = 0;
-        pageFlipForward.play().catch(error => {
-            console.log('Forward audio playback prevented:', error);
-            createFallbackSound('forward');
-        });
-    } catch (error) {
-        console.log('Error playing forward sound:', error);
-        createFallbackSound('forward');
-    }
-}
-
-// Fungsi untuk memutar suara mundur
-function playBackwardSound() {
-    if (!pageFlipBackward) return;
-    
-    try {
-        pageFlipBackward.currentTime = 0;
-        pageFlipBackward.play().catch(error => {
-            console.log('Backward audio playback prevented:', error);
-            createFallbackSound('backward');
-        });
-    } catch (error) {
-        console.log('Error playing backward sound:', error);
-        createFallbackSound('backward');
-    }
-}
-
-// Fallback sound effect
-function createFallbackSound(direction) {
-    try {
-        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-        const oscillator = audioContext.createOscillator();
-        const gainNode = audioContext.createGain();
-        
-        oscillator.connect(gainNode);
-        gainNode.connect(audioContext.destination);
-        
-        // Frekuensi berbeda untuk maju dan mundur
-        if (direction === 'forward') {
-            oscillator.frequency.setValueAtTime(150, audioContext.currentTime);
-            oscillator.frequency.exponentialRampToValueAtTime(80, audioContext.currentTime + 0.3);
-        } else {
-            oscillator.frequency.setValueAtTime(80, audioContext.currentTime);
-            oscillator.frequency.exponentialRampToValueAtTime(150, audioContext.currentTime + 0.3);
-        }
-        
-        gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
-        gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
-        
-        oscillator.start(audioContext.currentTime);
-        oscillator.stop(audioContext.currentTime + 0.3);
-    } catch (e) {
-        console.log('Web Audio API not supported');
-    }
-}
 </script>
 </body>
 
