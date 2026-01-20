@@ -202,20 +202,40 @@ body {
     margin-bottom: 20px;
 }
 
-/* --- NAVIGASI SAMPING TETAP MELAYANG --- */
+/* --- NAVIGASI SAMPING (PANAH) --- */
 .nav-side {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
     background: none;
     border: none;
-    color: rgba(0,0,0,0.2);
+    color: rgba(0, 0, 0, 0.3); /* Warna abu-abu transparan sesuai gambar */
     font-size: 40px;
     cursor: pointer;
-    z-index: 999;
+    z-index: 100;
+    padding: 20px;
+    transition: color 0.3s, transform 0.2s;
 }
-.nav-side.left { left: 20px; }
-.nav-side.right { right: 20px; }
+
+.nav-side:hover {
+    color: rgba(0, 0, 0, 0.8);
+    transform: translateY(-50%) scale(1.1);
+}
+
+.nav-side.left { left: 10px; }
+.nav-side.right { right: 10px; }
+
+/* --- TOOLBAR CONTAINER (TENGAH BAWAH) --- */
+.toolbar-container {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1001;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
 
 .toolbar {
     background: #ffffff;
@@ -260,8 +280,7 @@ body {
 }
 .menu-item:hover { background: #f9f9f9; }
 
-/* Sembunyikan panah di mobile agar tidak menutupi area baca */
-@media (max-width: 767px) {
-    .nav-side { font-size: 30px; padding: 10px;  }
-    .viewport { gap: 2px; }
+/* Sembunyikan panah di layar sangat kecil agar tidak menutupi buku */
+@media (max-width: 600px) {
+    .nav-side { font-size: 30px; padding: 10px; }
 }
