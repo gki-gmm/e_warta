@@ -15,7 +15,7 @@ body {
     width: 100vw;
     display: flex;
     justify-content: center;
-    align-items: flex-start;
+    align-items: center; /* Ubah ke center agar buku benar-benar di tengah layar */
 }
 
 /* --- LOADER --- */
@@ -43,6 +43,8 @@ body {
     width: 100%; height: 100%;
     display: flex; justify-content: center; align-items: center;
     position: relative;
+    /* Penting: Memastikan viewport adalah konteks stacking yang benar */
+    perspective: 2000px; 
 }
 
 /* Container Utama */
@@ -50,47 +52,62 @@ body {
     position: relative;
     width: 960px; height: 680px;
     
-    /* --- PERBAIKAN 1: Hapus Flexbox di container --- */
-    /* display: flex; justify-content: center; align-items: center; <--- HAPUS INI */
-    /* Kita biarkan Turn.js yang mengatur posisi tengah menggunakan margin-left */
+    /* --- PERBAIKAN BLUR #1: Hardware Acceleration --- */
+    /* Memaksa browser menggunakan GPU untuk rendering */
+    transform: translate3d(0,0,0); 
+    will-change: transform; /* Memberi hint ke browser bahwa elemen ini akan berubah */
     
-    transition: transform 0.6s ease;
-    /* overflow: hidden; (Opsional: tambahkan jika halaman mau keluar border saat dibalik) */
+    transition: transform 0.1s linear; /* Gunakan linear untuk scaling agar lebih responsif */
+    /* overflow: hidden; */ 
 }
 
 /* --- FLIPBOOK --- */
 .flipbook {
-    /* --- PERBAIKAN 2: Hapus transition margin-left --- */
-    /* Jangan beri transition pada margin-left karena Turn.js mengubahnya secara real-time */
     background: none; 
     box-shadow: none;
     opacity: 0; 
     visibility: hidden;
     
-    /* Hanya transisikan opacity dan visibility */
     transition: opacity 0.6s ease-in-out, visibility 0.6s;
-    
-    /* Pastikan lebar mengikuti setting JS (biasanya setengah dari container) */
-    /* width: 480px; height: 600px; <--- Diatur via JS, tapi bisa dipaksa di CSS jika perlu */
 }
 
 .flipbook.loaded { opacity: 1; visibility: visible; }
 
 /* Garis Tengah (Spine) */
 .flipbook.show-spine {
-    background: linear-gradient(to right, rgba(0,0,0,0) 48%, rgba(0,0,0,0.15) 50%, rgba(0,0,0,0) 52%);
+    background: linear-gradient(to right, rgba(0,0,0,0) 48%, rgba(0,0,0,0.1) 50%, rgba(0,0,0,0) 52%);
 }
 
 .flipbook .page {
-    background-color: white; transform-style: preserve-3d;
+    background-color: white; 
+    transform-style: preserve-3d; /* Penting untuk efek 3D */
     position: relative; z-index: 1;
+    
+    /* --- PERBAIKAN BLUR #2: Mencegah blur pada elemen yang berputar --- */
+    backface-visibility: hidden; 
+    -webkit-backface-visibility: hidden;
 }
 
 .flipbook img {
-    width: 100%; height: 100%; object-fit: fill;
-    display: block; user-select: none; pointer-events: none;
-    -webkit-backface-visibility: hidden; backface-visibility: hidden;
+    width: 100%; 
+    height: 100%; 
+    
+    /* --- PERBAIKAN BLUR #3 (PENTING): Hapus object-fit: fill --- */
+    /* 'fill' akan merentangkan gambar dan membuatnya buram jika rasio tidak pas. */
+    /* Gunakan 'contain' jika ingin gambar utuh tanpa terpotong/tumpuk, 
+       atau hapus properti ini jika gambar Anda sudah pas 960x680 */
+    object-fit: contain; 
+    
+    display: block; 
+    user-select: none; 
+    pointer-events: none;
+    
+    /* Trik CSS agar gambar terlihat lebih tajam di layar HD */
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+    image-rendering: pixelated; /* Jika gambar adalah pixel art, gunakan ini. Jika foto, hapus baris ini */
 }
+
 .flipbook .hard {
     background: #fff !important;
     color: #333;
@@ -103,38 +120,55 @@ body {
     height: 100%;
 }
 
-/* Overlay Shadow Halaman (Lipatan) */
+/* Overlay Shadow Halaman (Lipatan) - DIPERHALUS */
 .flipbook .page::after {
     content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-    z-index: 10; pointer-events: none; opacity: 1; transition: opacity 0.3s;
+    z-index: 10; pointer-events: none; 
+    /* Kurangi opacity shadow agar gambar di bawah terlihat lebih jelas (tidak gelap) */
+    opacity: 0.6; 
+    transition: opacity 0.3s;
 }
 
 @media (min-width: 768px) {
-    .flipbook .page.even::after { background: linear-gradient(to right, rgba(0,0,0,0) 95%, rgba(0,0,0,0.1) 100%); }
-    .flipbook .page.odd::after { background: linear-gradient(to right, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0) 5%); }
+    /* Gradient yang lebih halus agar tidak terlalu mengaburkan pinggiran */
+    .flipbook .page.even::after { background: linear-gradient(to right, rgba(0,0,0,0) 90%, rgba(0,0,0,0.05) 100%); }
+    .flipbook .page.odd::after { background: linear-gradient(to right, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0) 10%); }
     .flipbook .page.p1::after { background: none; }
     .flipbook .page.last::after { background: none; } 
 }
 
 @media (max-width: 767px) {
     .flipbook .page::after { background: none; }
-    /* Di Mobile, sembunyikan semua shadow custom agar tidak berat/aneh */
-    .book-container { width: auto; height: auto; 
-    justify-content: center;
-    align-items: flex-start;}
+    .book-container { 
+        width: auto; height: auto; 
+        justify-content: center;
+        align-items: flex-start;
+        /* Pastikan di mobile juga di-render di GPU */
+        transform: translate3d(0,0,0); 
+    }
 }
 
 /* --- CONTROLS --- */
 .controls {
-    background: rgba(0, 0, 0, 0.391); color: white;
+    background: rgba(0, 0, 0, 0.5); /* Sedikit gelapkan biar tombol kontras */
+    color: white;
     position: fixed; bottom: 20px; left: 50%;
-    transform: translateX(-50%); padding: 8px 20px;
+    transform: translateX(-50%); 
+    /* Pastikan tombol tidak blur */
+    filter: blur(0); 
+    padding: 8px 20px;
     border-radius: 50px; display: flex; gap: 15px; z-index: 999;
+    backdrop-filter: blur(5px);
 }
+
 .btn {
     background: none; border: none; color: white; font-size: 16px;
     cursor: pointer; transition: 0.2s; width: 35px; height: 35px;
     display: flex; justify-content: center; align-items: center;
+    outline: none;
 }
 .btn:hover { background: rgba(255, 255, 255, 0.2); transform: scale(1.1); }
-@media (max-width: 600px) { .controls { bottom: 15px; width: 90%; justify-content: space-around; } }
+
+@media (max-width: 600px) { 
+    .controls { bottom: 15px; width: 90%; justify-content: space-around; } 
+}
