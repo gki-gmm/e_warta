@@ -1,74 +1,85 @@
+apakah Benar seperti ini?
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <link rel="stylesheet" href="style.css" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <title>Warta Jemaat Digital</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>Warta Jemaat Digital</title>
 </head>
 
 <body>
 
-  <div id="loader-overlay">
-    <div class="spinner"></div>
-    <div class="loading-text">Memuat Warta...</div>
-  </div>
+    <div id="loader-overlay">
+        <div class="spinner"></div>
+        <div class="loading-text">Memuat Warta...</div>
+    </div>
+    <!-- Audio Element (Hidden) -->
+    <!-- Pastikan file ini ada di folder yang sama -->
+    <audio id="pageFlipSound" src="mixkit-page-turn-single-1104.wav" preload="auto"></audio>
 
-  <div class="viewport">
-    <button class="nav-side left" id="prevBtn"><i class="fa-solid fa-chevron-left"></i></button>
-    <button class="nav-side right" id="nextBtn"><i class="fa-solid fa-chevron-right"></i></button>
-    <div class="book-container">
-      <div class="flipbook">
-        <!-- Cover Depan -->
-        <div class="hard"><img src="images/cover1.webp" alt="" /></div>
+    <div class="viewport">
+        <button class="nav-side left" id="prevBtn"><i class="fa-solid fa-chevron-left"></i></button>
+        <button class="nav-side right" id="nextBtn"><i class="fa-solid fa-chevron-right"></i></button>
+        <div class="book-container">
+            <div class="flipbook">
+                <!-- Cover Depan -->
+                <div class="hard"><img src="images/cover1.svg" alt="" /></div>
 
-        <!-- Cover Dalam Depan (Akan dihapus di Mobile) -->
-        <div class="hard inside-cover"><img src="images/coverin1.webp" alt="" /></div>
+                <!-- Cover Dalam Depan (Akan dihapus di Mobile) -->
+                <div class="hard inside-cover"><img src="images/Coverin1.svg" alt="" /></div>
 
-        <!-- Halaman Isi -->
-        <div><img src="images/page1.webp" alt="" /></div>
-        <div><img src="images/page2.webp" alt="" /></div>
-        <div><img src="images/page3.webp" alt="" /></div>
-        <div><img src="images/page4.webp" alt="" /></div>
-        <div><img src="images/page5.webp" alt="" /></div>
-        <div><img src="images/page6.webp" alt="" /></div>
-        <div><img src="images/page7.webp" alt="" /></div>
-        <div><img src="images/page8.webp" alt="" /></div>
-        <div><img src="images/page9.webp" alt="" /></div>
-        <div><img src="images/page10.webp" alt="" /></div>
-        <div><img src="images/page11.webp" alt="" /></div>
-        <div><img src="images/page12.webp" alt="" /></div>
+                <!-- Halaman Isi -->
+                <div><img src="images/page1.svg" alt="" /></div>
+                <div><img src="images/page2.svg" alt="" /></div>
+                <div><img src="images/page3.svg" alt="" /></div>
+                <div><img src="images/page4.svg" alt="" /></div>
+                <div><img src="images/page5.svg" alt="" /></div>
+                <div><img src="images/page6.svg" alt="" /></div>
+                <div><img src="images/page7.svg" alt="" /></div>
+                <div><img src="images/page8.svg" alt="" /></div>
+                <div><img src="images/page9.svg" alt="" /></div>
+                <div><img src="images/page10.svg" alt="" /></div>
+                <div><img src="images/page11.svg" alt="" /></div>
+                <div><img src="images/page12.svg" alt="" /></div>
 
-        <!-- Cover Dalam Belakang (Akan dihapus di Mobile) -->
-        <div class="hard inside-cover"><img src="images/coverin2.webp" alt="" /></div>
+                <!-- Cover Dalam Belakang (Akan dihapus di Mobile) -->
+                <div class="hard inside-cover"><img src="images/Coverin2.svg" alt="" /></div>
 
-        <!-- Cover Belakang -->
-        <div class="hard"><img src="images/cover2.webp" alt="" /></div>
-      <div class="toolbar-container">
-        <div id="popupMenu" class="popup-menu">
-            <button class="menu-item" id="firstPageBtn"><i class="fa-solid fa-backward-step"></i> Goto First Page</button>
-            <button class="menu-item" id="lastPageBtn"><i class="fa-solid fa-forward-step"></i> Goto Last Page</button>
-            <button class="menu-item" id="toggleSoundMenu"><i class="fa-solid fa-volume-high" id="soundIconMenu"></i> Turn on/off Sound</button>
+                <!-- Cover Belakang -->
+                <div class="hard"><img src="images/cover2.svg" alt="" /></div>
+
+            </div>
         </div>
+        <div class="toolbar-container">
+            <div id="popupMenu" class="popup-menu">
+                <button class="menu-item" id="firstPageBtn"><i class="fa-solid fa-backward-step"></i> Goto First
+                    Page</button>
+                <button class="menu-item" id="lastPageBtn"><i class="fa-solid fa-forward-step"></i> Goto Last
+                    Page</button>
+                <button class="menu-item" id="toggleSoundMenu"><i class="fa-solid fa-volume-high"
+                        id="soundIconMenu"></i> Turn on/off Sound</button>
+            </div>
 
-        <div class="toolbar">
-            <div class="page-indicator" id="pageLabel">1 / 14</div>
-            <div class="separator"></div>
-            <button class="btn" id="zoomOut"><i class="fa-solid fa-minus"></i></button>
-            <button class="btn" id="zoomIn"><i class="fa-solid fa-plus"></i></button>
-            <div class="separator"></div>
-            <button class="btn" id="fullscreenBtn"><i class="fa-solid fa-expand"></i></button>
-            <button class="btn" id="menuBtn"><i class="fa-solid fa-ellipsis"></i></button>
+            <div class="toolbar">
+                <div class="page-indicator" id="pageLabel">1 / 14</div>
+                <div class="separator"></div>
+                <button class="btn" id="zoomOut"><i class="fa-solid fa-minus"></i></button>
+                <button class="btn" id="zoomIn"><i class="fa-solid fa-plus"></i></button>
+                <div class="separator"></div>
+                <button class="btn" id="fullscreenBtn"><i class="fa-solid fa-expand"></i></button>
+                <button class="btn" id="menuBtn"><i class="fa-solid fa-ellipsis"></i></button>
+            </div>
+
         </div>
     </div>
-</div>
 
-  <script src="jquery.js"></script>
-  <script src="turn.js"></script>
+    <script src="jquery.js"></script>
+    <script src="turn.js"></script>
 
- <script>
+    <script>
     $(window).on('load', function () {
         var flipbook = $(".flipbook");
         var loader = $("#loader-overlay");
