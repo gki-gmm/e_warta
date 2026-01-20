@@ -82,7 +82,7 @@ body {
     justify-content: center;
     align-items: center;
     position: relative;
-    gap: 10px; /* Memberi jarak antara buku dan tombol navigasi */
+    gap: 5px; /* Memberi jarak antara buku dan tombol navigasi */
     padding: 20px 0;
 }
 
