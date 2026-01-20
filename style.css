@@ -1,142 +1,58 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 
-* {
+*{
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: "Poppins", sans-serif;
+	font-family: "Poppins", sans-serif;
 }
 
 body {
-    background: #ffffff;
-    overflow: hidden;
+    display: grid;
+    place-content: center;
     height: 100vh;
     width: 100vw;
+	overflow: hidden;
+	background: #f1c40f;
 }
 
-/* --- VIEWPORT --- */
-.viewport {
-    width: 960px;
-    height: 680px;
-    position: relative; /* Menjadi patokan elemen melayang */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: #f4f4f4;
+.flipbook {
+    width: 1000px;
+    height: 600px;
 }
 
-/* --- LOADER --- */
-#loader-overlay {
-    position: fixed;
-    top: 0; left: 0; width: 100%; height: 100%;
-    background: #ffffff; z-index: 9999;
-    display: flex; flex-direction: column; justify-content: center; align-items: center;
-}
-.spinner {
-    width: 40px; height: 40px; border: 3px solid rgba(0,0,0,0.1);
-    border-radius: 50%; border-top-color: #333;
-    animation: spin 1s linear infinite;
-}
-@keyframes spin { to { transform: rotate(360deg); } }
-
-/* --- BOOK CONTAINER --- */
-.book-container {
-    position: relative;
-    z-index: 5;
-    transition: transform 0.3s ease;
+.flipbook .hard {
+    background: #c0392b !important;
+    color: #fff;
+    font-weight: bold;
+    border: none; 
 }
 
-/* --- NAVIGASI SAMPING (MELAYANG) --- */
-.nav-side {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    background: none;
-    border: none;
-    color: rgba(0, 0, 0, 0.2);
-    font-size: 40px;
-    cursor: pointer;
-    z-index: 100;
-    padding: 20px;
-    transition: color 0.3s;
-}
-.nav-side:hover { color: rgba(0, 0, 0, 0.5); }
-.nav-side.left { left: 10px; }
-.nav-side.right { right: 10px; }
-
-/* --- TOOLBAR MELAYANG DI BAWAH --- */
-.toolbar-container {
-    position: absolute;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 1000;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+.flipbook .hard small{
+	font-style: italic;
+	font-weight: lighter;
+	opacity: 0.7;
+	font-size: 14px;
 }
 
-.toolbar {
-    background: #ffffff;
-    padding: 6px 15px;
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    border: 1px solid rgba(0,0,0,0.1);
-}
-
-.btn {
-    background: none;
-    border: none;
-    color: #555;
-    width: 35px;
-    height: 35px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    border-radius: 4px;
-    font-size: 16px;
-}
-.btn:hover { background: #f0f0f0; }
-
-.page-indicator {
-    font-size: 13px;
-    color: #333;
-    min-width: 60px;
-    text-align: center;
-}
-
-.separator {
-    width: 1px;
-    height: 20px;
-    background: #ddd;
-}
-
-/* --- POPUP MENU --- */
-.popup-menu {
+.flipbook .page {
     background: white;
-    border-radius: 8px;
-    padding: 5px 0;
-    box-shadow: 0 -5px 15px rgba(0,0,0,0.1);
-    border: 1px solid #ddd;
-    margin-bottom: 10px;
-    display: none;
-    flex-direction: column;
-    width: 180px;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+    gap: 10px;
+    border: 1px solid rgba(0, 0, 0, 0.11);
 }
-.popup-menu.show { display: flex; }
-.menu-item {
-    background: none; border: none; padding: 10px 15px;
-    text-align: left; font-size: 13px; cursor: pointer;
-    display: flex; align-items: center; gap: 10px; color: #333;
-}
-.menu-item:hover { background: #f5f5f5; }
 
-/* Responsif Mobile */
-@media (max-width: 767px) {
-    .nav-side { display: none; } /* Sembunyikan panah samping di HP */
-    .toolbar { transform: scale(0.9); }
+.page img{
+	width: 70%;
+	object-fit: cover;
+	margin: auto;
 }
+
+.flipbook .page small{
+	font-size: 14px;
+    margin-bottom: 10px;
+}
+
