@@ -123,20 +123,6 @@ body {
     justify-content: center;
     align-items: flex-start;}
 }
-
-/* --- CONTROLS --- */
-.controls {
-    background: rgba(0, 0, 0, 0.391); color: white;
-    position: fixed; bottom: 20px; left: 50%;
-    transform: translateX(-50%); padding: 8px 20px;
-    border-radius: 50px; display: flex; gap: 15px; z-index: 999;
-}
-.btn {
-    background: none; border: none; color: white; font-size: 16px;
-    cursor: pointer; transition: 0.2s; width: 35px; height: 35px;
-    display: flex; justify-content: center; align-items: center;
-}
-.btn:hover { background: rgba(255, 255, 255, 0.2); transform: scale(1.1); }
 /* --- NAVIGASI SAMPING (PANAH) --- */
 .nav-side {
     position: absolute;
