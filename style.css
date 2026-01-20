@@ -197,9 +197,12 @@ body {
 
 /* --- TOOLBAR TETAP DI BAWAH --- */
 .toolbar-container {
-    position: relative; /* Tidak lagi melayang (absolute) */
-    z-index: 1000;
-    margin-bottom: 20px;
+    position: relative; 
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
 }
 
 /* --- NAVIGASI SAMPING TETAP MELAYANG --- */
