@@ -86,11 +86,15 @@
             var isSoundOn = true;
 
             function playPageSound() {
+                // Mengecek apakah status suara aktif (true) dan file audio tersedia
                 if (isSoundOn && audio) {
-                    audio.currentTime = 0;
+                    audio.currentTime = 0; // Reset ke awal agar suara tidak tumpang tindih
                     var playPromise = audio.play();
+
                     if (playPromise !== undefined) {
-                        playPromise.catch(error => console.log("Audio blocked:", error));
+                        playPromise.catch(error => {
+                            console.log("Autoplay diblokir browser sampai ada interaksi user.");
+                        });
                     }
                 }
             }
