@@ -81,96 +81,79 @@
     <script>
         $(window).on('load', function () {
             var flipbook = $(".flipbook");
-            var loader = $("#loader-overlay");
             var audio = document.getElementById("pageFlipSound");
-
-            // Status Suara (Gunakan satu variabel global di dalam load)
             var isSoundOn = true;
             var currentZoomScale = 1;
 
-            // Fungsi suara yang menghargai status isSoundOn
+            // Fungsi Suara Aman
             function playPageSound() {
                 if (isSoundOn && audio) {
                     audio.currentTime = 0;
-                    audio.play().catch(function (e) { console.log("Audio blocked"); });
+                    audio.play().catch(() => { });
                 }
             }
 
-            // Inisialisasi Flipbook
+            // Inisialisasi Turn.js
             flipbook.turn({
                 width: 960,
                 height: 680,
                 autoCenter: true,
                 duration: 1000,
                 when: {
-                    turning: function () {
-                        playPageSound(); // Hanya bunyi jika isSoundOn = true
-                    },
+                    turning: function () { playPageSound(); },
                     turned: function (e, page, view) {
-                        var totalPages = flipbook.turn("pages");
-                        var pageLabel = (view[0] || view[1]) ? view.join("/") : page;
-                        $("#pageLabel").text(pageLabel + " / " + totalPages);
+                        var total = flipbook.turn("pages");
+                        var label = (view[0] || view[1]) ? view.join("/") : page;
+                        $("#pageLabel").text(label + " / " + total);
                     }
                 }
             });
 
-            // Logika ON/OFF Suara (PERBAIKAN)
-            $("#toggleSoundMenu").on("click", function (e) {
-                e.stopPropagation();
-                isSoundOn = !isSoundOn; // Balikkan status
+            // Perbaikan: Pastikan ID tombol sesuai dengan HTML agar tidak NULL
+            $("#prevBtnSide").click(function () { flipbook.turn("previous"); });
+            $("#nextBtnSide").click(function () { flipbook.turn("next"); });
 
-                if (isSoundOn) {
-                    $(this).html('<i class="fa-solid fa-volume-high"></i> Turn off Sound');
-                    playPageSound(); // Tes bunyi saat diaktifkan
-                } else {
-                    $(this).html('<i class="fa-solid fa-volume-xmark"></i> Turn on Sound');
-                    // Saat OFF, fungsi playPageSound tidak akan melakukan apa-apa
-                }
+            $("#zoomInBtn").click(function () {
+                currentZoomScale = Math.min(currentZoomScale + 0.1, 2);
+                applyZoom();
             });
 
-            // Navigasi
-            $("#prevBtn").click(function () { flipbook.turn("previous"); });
-            $("#nextBtn").click(function () { flipbook.turn("next"); });
+            $("#zoomOutBtn").click(function () {
+                currentZoomScale = Math.max(currentZoomScale - 0.1, 0.6);
+                applyZoom();
+            });
 
-            // Zoom Logic
+            // Toggle Suara
+            $("#toggleSoundMenu").on("click", function (e) {
+                e.stopPropagation();
+                isSoundOn = !isSoundOn;
+                $(this).html(isSoundOn ?
+                    '<i class="fa-solid fa-volume-high"></i> Turn off Sound' :
+                    '<i class="fa-solid fa-volume-xmark"></i> Turn on Sound');
+            });
+
+            // Menu Popup
+            $("#menuBtn").click(function (e) {
+                e.stopPropagation();
+                $("#popupMenu").toggleClass("show");
+            });
+            $(document).click(function () { $("#popupMenu").removeClass("show"); });
+
+            // Fungsi Zoom & Responsive
             function applyZoom() {
-                var width = $(window).width();
                 var baseScale = 1;
-                if (width >= 768) {
-                    var scaleX = (width - 60) / 960;
-                    var scaleY = ($(window).height() - 150) / 680; // Kurangi ruang untuk toolbar
+                if ($(window).width() >= 768) {
+                    var scaleX = ($(window).width() - 60) / 960;
+                    var scaleY = ($(window).height() - 160) / 680;
                     baseScale = Math.min(scaleX, scaleY);
-                    if (baseScale > 1.2) baseScale = 1.2;
                 }
                 $(".book-container").css("transform", "scale(" + (baseScale * currentZoomScale) + ")");
             }
 
-            $("#zoomIn").click(function () { currentZoomScale = Math.min(currentZoomScale + 0.1, 2); applyZoom(); });
-            $("#zoomOut").click(function () { currentZoomScale = Math.max(currentZoomScale - 0.1, 0.6); applyZoom(); });
-
-            // Menu Popup
-            $("#menuBtn").click(function (e) { e.stopPropagation(); $("#popupMenu").toggleClass("show"); });
-            $(document).click(function () { $("#popupMenu").removeClass("show"); });
-
-            // Responsive
-            $(window).resize(function () {
-                var width = $(window).width();
-                if (width < 768) {
-                    flipbook.turn("display", "single");
-                    var mWidth = width - 20;
-                    flipbook.turn("size", mWidth, mWidth * 1.414);
-                    $(".book-container").css({ "transform": "none", "width": mWidth, "height": mWidth * 1.414 });
-                } else {
-                    flipbook.turn("display", "double");
-                    flipbook.turn("size", 960, 680);
-                    applyZoom();
-                }
-            });
-            $(window).trigger('resize');
-
-            setTimeout(function () { loader.fadeOut(500); }, 500);
+            $(window).resize(applyZoom);
+            applyZoom();
+            $("#loader-overlay").fadeOut(500);
         });
-    </script>
-</body>
+</body >
 
-</html>
+</html >
