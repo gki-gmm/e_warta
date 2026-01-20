@@ -90,6 +90,7 @@ body {
     position: relative;
     margin: 0 !important; /* Menghapus margin bawaan */
     flex-shrink: 1; /* Memungkinkan buku mengecil jika layar sempit */
+    z-index: 5;
 }
 
 /* --- FLIPBOOK --- */
