@@ -200,129 +200,85 @@ body {
     }
 }
 
-/* --- TOOLBAR CONTAINER --- */
+/* --- NAVIGASI SAMPING (PANAH) --- */
+.nav-side {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: rgba(0, 0, 0, 0.3); /* Warna abu-abu transparan sesuai gambar */
+    font-size: 40px;
+    cursor: pointer;
+    z-index: 100;
+    padding: 20px;
+    transition: color 0.3s, transform 0.2s;
+}
+
+.nav-side:hover {
+    color: rgba(0, 0, 0, 0.8);
+    transform: translateY(-50%) scale(1.1);
+}
+
+.nav-side.left { left: 10px; }
+.nav-side.right { right: 10px; }
+
+/* --- TOOLBAR CONTAINER (TENGAH BAWAH) --- */
 .toolbar-container {
     position: absolute;
-    bottom: 30px;
+    bottom: 20px;
     left: 50%;
     transform: translateX(-50%);
-    z-index: 1000;
+    z-index: 1001;
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
-/* --- TOOLBAR UTAMA --- */
 .toolbar {
     background: #ffffff;
-    color: #5f6368; /* Warna ikon abu-abu */
-    padding: 8px 15px;
+    padding: 6px 15px;
     border-radius: 8px;
     display: flex;
     align-items: center;
-    gap: 10px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.15);
-    border: 1px solid rgba(0,0,0,0.1);
+    gap: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    border: 1px solid #ddd;
 }
 
-/* --- TOMBOL TOOLBAR --- */
-.btn {
-    background: none;
-    border: none;
-    color: #5f6368;
-    font-size: 18px;
-    cursor: pointer;
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    transition: background 0.2s;
-}
-
-.btn:hover, .btn.active {
-    background: rgba(0,0,0,0.05);
-    color: #202124;
-}
-
-/* --- INDIKATOR HALAMAN --- */
 .page-indicator {
-    font-size: 14px;
-    font-weight: 500;
-    color: #3c4043;
-    padding: 0 10px;
-    white-space: nowrap;
-}
-
-/* --- PEMISAH VERTIKAL --- */
-.separator {
-    width: 1px;
-    height: 24px;
-    background: rgba(0,0,0,0.15);
-    margin: 0 5px;
-}
-
-/* --- POPUP MENU --- */
-.popup-menu {
-    background: #ffffff;
-    border-radius: 8px;
-    padding: 8px 0;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
-    border: 1px solid rgba(0,0,0,0.1);
-    margin-bottom: 15px;
-    display: none; /* Tersembunyi secara default */
-    flex-direction: column;
-    width: 200px;
-}
-
-.popup-menu.show {
-    display: flex;
-}
-
-.menu-item {
-    background: none;
-    border: none;
-    color: #3c4043;
-    font-size: 14px;
-    padding: 10px 20px;
-    text-align: left;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    width: 100%;
-    transition: background 0.2s;
-}
-
-.menu-item:hover {
-    background: rgba(0,0,0,0.05);
-}
-
-.menu-item i {
-    font-size: 16px;
-    width: 20px;
+    font-size: 13px;
+    color: #666;
+    min-width: 60px;
     text-align: center;
-    color: #5f6368;
 }
 
-/* --- RESPONSIVE MOBILE --- */
-@media (max-width: 767px) {
-    .toolbar {
-        padding: 5px 10px;
-        gap: 5px;
-    }
-    .btn {
-        width: 32px;
-        height: 32px;
-        font-size: 16px;
-    }
-    .page-indicator {
-        font-size: 12px;
-        padding: 0 5px;
-    }
-    /* Sembunyikan tombol yang kurang penting di HP */
-    .btn[title="Print"], .btn[title="Download"], .btn[title="Thumbnails"] {
-        display: none;
-    }
+.separator { width: 1px; height: 20px; background: #eee; margin: 0 5px; }
+
+.btn {
+    background: none; border: none; color: #555;
+    width: 32px; height: 32px; display: flex;
+    justify-content: center; align-items: center;
+    cursor: pointer; border-radius: 4px;
+}
+
+.btn:hover { background: #f5f5f5; }
+
+/* Popup Menu */
+.popup-menu {
+    background: white; border-radius: 8px; padding: 5px 0;
+    box-shadow: 0 -5px 15px rgba(0,0,0,0.1);
+    border: 1px solid #ddd; margin-bottom: 10px;
+    display: none; flex-direction: column; width: 180px;
+}
+.popup-menu.show { display: flex; }
+.menu-item {
+    background: none; border: none; padding: 10px 15px;
+    text-align: left; font-size: 13px; cursor: pointer; display: flex; align-items: center; gap: 10px;
+}
+.menu-item:hover { background: #f9f9f9; }
+
+/* Sembunyikan panah di layar sangat kecil agar tidak menutupi buku */
+@media (max-width: 600px) {
+    .nav-side { font-size: 30px; padding: 10px; }
 }
