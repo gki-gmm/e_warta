@@ -148,7 +148,7 @@ body {
 
 /* --- TOOLBAR CONTAINER (TENGAH BAWAH) --- */
 .toolbar-container {
-    position: absolute;
+    position: relative;
     bottom: 20px;
     left: 50%;
     transform: translateX(-50%);
