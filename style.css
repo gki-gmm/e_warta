@@ -272,8 +272,8 @@ body {
 }
 .menu-item:hover { background: #f9f9f9; }
 
-/* Sembunyikan panah di layar sangat kecil agar tidak menutupi buku */
-@media (max-width: 600px) {
-    .nav-side { font-size: 30px; padding: 10px; }
+/* Sembunyikan panah di mobile agar tidak menutupi area baca */
+@media (max-width: 767px) {
+    .nav-side { font-size: 30px; padding: 10px;  }
     .viewport { gap: 2px; }
 }
